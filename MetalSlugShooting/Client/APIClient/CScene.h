@@ -17,6 +17,8 @@ private:
 	HDC			m_hDC;
 	HINSTANCE	m_hInst;
 
+	string		m_strTag;
+
 public:
 	bool Init();
 	void Input(float fTime);
@@ -61,5 +63,8 @@ public:
 	class CInput* GetInput() const;
 	HDC	GetHdc() const;
 	HINSTANCE	GetInst() const;
+
+
+	void SetTag(string strTag);
 };
 

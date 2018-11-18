@@ -22,6 +22,8 @@ DATA g_tData;
 Key_DATA g_tKeyData;
 int	g_iConnectNum = 0;
 char buf[BUFSIZE] = {};
+
+int g_iBulletCount[PLAYERMAX] = {};
 //=====================================================================
 
 // 클라이언트와 데이터 통신 스레드함수
@@ -35,6 +37,7 @@ void Update(int id, SOCKET sock, float fTime);
 
 
 void DataInit();
+void BulletUpdate(int id);
 
 int main(int argc, char *argv[])
 {
@@ -183,7 +186,9 @@ void Input(int id, SOCKET sock, float fTime)
 	if (g_iGameState != GAME_PLAY)
 		return;
 
-	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);
+	//EnterCriticalSection(&cs);
+	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
+	//LeaveCriticalSection(&cs);
 
 	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
 
@@ -203,7 +208,15 @@ void Input(int id, SOCKET sock, float fTime)
 	{
 		if (g_tData.player[id].bulletcnt < 1)
 			return;
-		g_tData.player[id].bulletcnt -= 1;
+
+		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
+		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
+		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
+		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
+		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
+		
 		cout << "CreateBullet" << endl;
 	}
 }
@@ -228,15 +241,12 @@ void Update(int id, SOCKET sock, float fTime)
 
 	if (g_iGameState == GAME_PLAY)
 	{
-		g_fTime -= fTime;
+		g_fTimeLimit -= fTime;
 
-		for (int i = 0; i < g_tData.bulletcnt[id]; ++i)
-		{
-			g_tData.bullet[id][i].x += BULLET_SPEED * g_tData.bullet[id][i].dir;
-		}
+		BulletUpdate(id);
 
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
-		cout << id + 1 << "P : SendData" << endl;
+		cout << id + 1 << "P에게 데이터 보냄" << endl;
 	}
 }
 
@@ -255,7 +265,7 @@ void DataInit()
 	g_tData.player[0].magazinecnt = 2;
 	g_tData.player[0].boomcnt = 0;
 	g_tData.player[0].bulletcnt = 10;
-	g_tData.player[0].hp = 100;
+	g_tData.player[0].hp = 30;
 	g_tData.player[0].dir = 1;
 
 	g_tData.player[1].num = 2;
@@ -268,7 +278,28 @@ void DataInit()
 	g_tData.player[1].dir = -1;
 
 
-	g_tData.bullet[0] = NULL;
+	for (int i = 0; i < PLAYERMAX; ++i)
+	{
+		for (int j = 0; j < MAXCOUNT; ++j)
+		{
+			g_tData.bullet[i][j].x = -200;
+			g_tData.bullet[i][j].y = -200;
+			g_tData.bullet[i][j].dir = 0;
+			g_tData.bullet[i][j].num = i;
+			g_tData.bullet[i][j].shoot = false;
+		}
 
-	g_tData.bullet[1] = NULL;
+		g_iBulletCount[i] = 0;
+	}
+}
+
+void BulletUpdate(int id)
+{
+	for (int i = 0; i < MAXCOUNT; ++i)
+	{
+		if (!g_tData.bullet[id][i].shoot)
+			continue;
+
+		g_tData.bullet[id][i].x += BULLET_SPEED * g_tData.bullet[id][i].dir;
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "CGameObject.h"
+#include "CBullet.h"
 
 class CPlayer : public CGameObject
 {
@@ -16,7 +17,9 @@ private:
 	bool		m_bChange;		// 탄창 교환
 	float		m_fChangeTime;
 
-	class CBullet	m_pBullet[100];
+	CBullet		m_pBullet[MAXCOUNT];
+
+	bool		m_bScene;		// 굳이 씬 여러번 채워줄 필요없으니까
 
 public:
 	PlayerInfo GetPlayerInfo()	const;
@@ -25,6 +28,7 @@ public:
 
 public:
 	void SetPlayerInfo(PlayerInfo info);
+	void SetBulletInfo(BulletInfo* info);
 
 private:
 	void CreateBullet();

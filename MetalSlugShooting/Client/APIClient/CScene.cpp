@@ -122,6 +122,7 @@ void CScene::Render(HDC hDC, float fTime)
 
 void CScene::AddObject(CGameObject * pObj)
 {
+	pObj->SetScene(this);
 	m_ObjList.push_back(pObj);
 }
 
@@ -149,4 +150,9 @@ HDC CScene::GetHdc() const
 HINSTANCE CScene::GetInst() const
 {
 	return m_hInst;
+}
+
+void CScene::SetTag(string strTag)
+{
+	m_strTag = strTag;
 }

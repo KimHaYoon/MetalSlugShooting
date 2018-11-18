@@ -16,6 +16,7 @@
 #define SHOOT_KEY		6		// 총알발사
 
 #define PLAYERMAX		2
+#define MAXCOUNT		100
 
 #define PLAYER_SPEED	3.f
 #define BULLET_SPEED	3.f
@@ -38,7 +39,8 @@ struct BulletInfo
 	int num;			// 총알의 주인	1:1p 2:2p
 	int x;				// 좌표 x
 	int y;				// 좌표 y
-	bool dir;			// 총알의 방향
+	int dir;			// 총알의 방향
+	bool shoot;			// 발사했는지
 };						// 17btye
 
 struct ItemInfo
@@ -50,10 +52,9 @@ struct ItemInfo
 
 struct DATA
 {
-	int  num;						// 1P, 2P
-	PlayerInfo	player[PLAYERMAX];	// 플레이어 정보
-	BulletInfo* bullet[PLAYERMAX];	// 총알 정보
-	int bulletcnt[PLAYERMAX];
+	int  num;									// 1P, 2P
+	PlayerInfo	player[PLAYERMAX];				// 플레이어 정보
+	BulletInfo  bullet[PLAYERMAX][MAXCOUNT];	// 총알 정보
 };
 
 struct Key_DATA

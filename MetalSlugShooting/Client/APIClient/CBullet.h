@@ -10,16 +10,13 @@ public:
 
 private:
 	BulletInfo	m_tInfo;
-	float		m_fSpeed;
-
-	int			m_iDir;
 
 public:
 	void SetInfo(BulletInfo info);
 	BulletInfo GetInfo() const;
 
 public:
-	virtual bool Init(float2 fPos, int iDir);
+	virtual bool Init();
 	virtual void Input(float fTime);
 	virtual void Update(float fTime);
 	virtual void Render(HDC hDC, float fTime);

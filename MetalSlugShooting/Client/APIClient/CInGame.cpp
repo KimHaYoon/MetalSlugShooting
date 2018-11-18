@@ -28,6 +28,8 @@ CInGame::~CInGame()
 
 bool CInGame::Init()
 {
+	m_pScene->SetTag("Ingame");
+
 	// ¹è°æ
 	m_pBackGround = new CBackground("Back1");
 	
@@ -52,7 +54,7 @@ bool CInGame::Init()
 	m_pPlayer[0]->SetPlayerInfo(tData.player[0]);
 	m_pPlayer[0]->SetTexture("Player1", m_hInst, m_hDC, L"Texture/Player_LEFT.bmp", true, RGB(0.f, 0.f, 0.f));
 	m_pPlayer[0]->SetInput(m_pScene->GetInput());
-	m_pPlayer[0]->SetScene(m_pScene);
+	//m_pPlayer[0]->SetScene(m_pScene);
 	m_pScene->AddObject(m_pPlayer[0]);
 	//=============================================================================================================
 	// Player2
@@ -118,11 +120,13 @@ void CInGame::Input(float fTime)
 void CInGame::Update(float fTime)
 {
 	DATA tData = GET_NETWORKINST->GetData();
-	m_pPlayer[0]->SetPlayerInfo(tData.player[0]);
-	m_pPlayer[1]->SetPlayerInfo(tData.player[1]);
 
-	m_pHPGauge[0]->SetHP(m_pPlayer[0]->GetHP());
-	m_pHPGauge[1]->SetHP(m_pPlayer[1]->GetHP());
+	for (int i = 0; i < PLAYERMAX; ++i)
+	{
+		m_pPlayer[i]->SetPlayerInfo(tData.player[i]);
+		m_pHPGauge[i]->SetHP(m_pPlayer[i]->GetHP());
+		m_pPlayer[i]->SetBulletInfo(tData.bullet[i]);
+	}
 }
 
 void CInGame::Render(HDC hDC, float fTime)

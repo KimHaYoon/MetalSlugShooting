@@ -26,16 +26,8 @@ BulletInfo CBullet::GetInfo() const
 	return m_tInfo;
 }
 
-bool CBullet::Init(float2 fPos, int iDir)
+bool CBullet::Init()
 {
-	m_fPos.x = fPos.x;
-	m_fPos.y = fPos.y;
-
-	m_tInfo.x = m_fPos.x;
-	m_tInfo.y = m_fPos.y;
-
-	m_iDir = iDir;
-	m_fSpeed = 500.f;
 	return true;
 }
 
@@ -47,7 +39,7 @@ void CBullet::Update(float fTime)
 {
 	CGameObject::Update(fTime);
 
-	m_fPos.x += m_fSpeed * m_iDir * fTime;
+	/*m_fPos.x += m_fSpeed * m_iDir * fTime;
 
 	if (m_fPos.x + (1.f - m_fPivot.x) * m_fSize.x < 0 ||
 		m_fPos.x - m_fPivot.x * m_fSize.x > WIN_WIDTH ||
@@ -55,7 +47,7 @@ void CBullet::Update(float fTime)
 		m_fPos.y - m_fPivot.y * m_fSize.y > WIN_HEIGHT)
 	{
 		Die();
-	}
+	}*/
 
 }
 

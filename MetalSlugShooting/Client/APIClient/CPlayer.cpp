@@ -42,26 +42,17 @@ void CPlayer::SetPlayerInfo(PlayerInfo info)
 	m_tInfo = info;
 }
 
+void CPlayer::SetBulletInfo(BulletInfo* info)
+{
+	for (int i = 0; i < MAXCOUNT; ++i)
+	{
+		m_pBullet[i].SetPos(info[i].x, info[i].y);
+	}
+}
+
 void CPlayer::CreateBullet()
 {
-	if (m_tInfo.bulletcnt < 1)
-		return;
 
-	CBullet* pBullet = new CBullet("Bullet");
-
-	if (!pBullet->Init(m_fPos, m_tInfo.dir))
-	{
-		if (pBullet)
-		{
-			delete pBullet;
-
-			pBullet = NULL;
-		}
-	}
-	pBullet->SetTexture("Bullet", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Bullet.bmp", true, RGB(0, 248, 0));
-
-	m_pScene->AddObject(pBullet);
-	m_tInfo.bulletcnt -= 1;
 }
 
 void CPlayer::ChangeMagazine()
@@ -108,6 +99,7 @@ bool CPlayer::Init()
 	m_fSpeed = 300.f;
 	m_bChange = false;
 	m_fChangeTime = 0.f;
+	m_bScene = false;
 
 	CreateAnimation("Man", AT_LINE, AO_LOOP, 1200, 1000, 6, 5, 1.f);
 	m_pAnimation->AddLineFrameCount(4);
@@ -117,6 +109,7 @@ bool CPlayer::Init()
 	m_pAnimation->AddLineFrameCount(2);
 
 	m_pAnimation->ChangeAnimation(0);
+	
 	return true;
 }
 
@@ -178,6 +171,17 @@ void CPlayer::Update(float fTime)
 {
 	CGameObject::Update(fTime);
 
+	if (m_pScene && !m_bScene)
+	{
+		for (int i = 0; i < MAXCOUNT; ++i)
+		{
+			m_pBullet[i].Init();
+			m_pBullet[i].SetTexture("Bullet", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Bullet.bmp", true, RGB(0, 248, 0));
+		}		
+
+		m_bScene = true;			// æ¿ √§øˆ¡·¿∏¥œ true 
+	}
+
 	m_fPos.x = m_tInfo.x;
 	m_fPos.y = m_tInfo.y;
 
@@ -190,12 +194,22 @@ void CPlayer::Update(float fTime)
 			ChangeMagazine();
 		}
 	}
+
+	for (int i = 0; i < MAXCOUNT; ++i)
+	{
+		m_pBullet[i].Update(fTime);
+	}
 }
 
 void CPlayer::Render(HDC hDC, float fTime)
 {
 	CGameObject::Render(hDC, fTime);
 
+
+	for (int i = 0; i < MAXCOUNT; ++i)
+	{
+		m_pBullet[i].Render(hDC, fTime);
+	}
 
 	TCHAR str[128];
 	if (m_tInfo.num == 1)
