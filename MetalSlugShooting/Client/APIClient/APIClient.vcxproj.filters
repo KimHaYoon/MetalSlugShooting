@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="01. GameFramework">
+      <UniqueIdentifier>{dec41f88-0513-42b1-bd45-78b3ea34ddbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\01. Timer">
+      <UniqueIdentifier>{f885e46b-7955-436c-b552-0bb8a98a16f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\05. Animation">
+      <UniqueIdentifier>{cbe4da32-5d50-430a-9816-4d238d3c1485}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. 게임 장면">
+      <UniqueIdentifier>{b1d06ebd-2bc9-4a73-a303-1ae75a89c495}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. 게임 장면\01. 로고">
+      <UniqueIdentifier>{31647e75-ded1-4bd1-a507-b393f87b5fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. 게임 장면\02. 로비">
+      <UniqueIdentifier>{c7c02f01-4d9f-4732-b96b-280cb50eea0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. 게임 장면\03. 인게임">
+      <UniqueIdentifier>{241b7425-a6fc-4eb7-ada2-23efffe89615}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트">
+      <UniqueIdentifier>{2c4cb075-bcbb-4b8e-b1af-ed957e387661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\01. 배경">
+      <UniqueIdentifier>{6234c028-098f-4224-bc9b-bd34659be41f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\03. Scene">
+      <UniqueIdentifier>{01bcaa68-3e2f-4ac9-9d00-91adcc4ef2cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\04. GameObject">
+      <UniqueIdentifier>{f1982883-2716-4810-8506-b48d87d87b6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\05. Texture">
+      <UniqueIdentifier>{dbb085c2-b1c7-4ae0-b303-c0c552953b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. GameFramework\02. Input">
+      <UniqueIdentifier>{55b8dd0d-a729-4eb8-9e12-0a709553854b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\02. 캐릭터">
+      <UniqueIdentifier>{da700e56-cfce-4513-9a77-bd1a998c08c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\03. 총알">
+      <UniqueIdentifier>{06747a26-d062-43fc-90c6-261c57818b47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\04. 아이템">
+      <UniqueIdentifier>{ee11a2b4-8d0b-42ce-86b1-dd333722757a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\04. 아이템\01. 수류탄">
+      <UniqueIdentifier>{6a6d5e09-315a-45a8-bdca-904d853e00a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\04. 아이템\02. 탄창">
+      <UniqueIdentifier>{7b332376-37bb-4a5e-8f34-4f0faaf2547d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\04. 아이템\03. 체력회복">
+      <UniqueIdentifier>{7c691c6d-23f7-4b12-b275-6581d655f252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\05. UI">
+      <UniqueIdentifier>{751ed8b1-6c31-4113-8d80-fd230d16eec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\05. UI\01. 체력바">
+      <UniqueIdentifier>{e4cdf8cb-1d08-4af5-97a7-537b7d522bb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. Network">
+      <UniqueIdentifier>{7ad0311d-b38d-4656-a29a-4d29e0af5606}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="APIClient.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Protocol.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameFramework.h">
+      <Filter>01. GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>01. GameFramework\01. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimation.h">
+      <Filter>01. GameFramework\05. Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="CScene.h">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneManager.h">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CSceneScript.h">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CGameObject.h">
+      <Filter>01. GameFramework\04. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>01. GameFramework\05. Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CInGame.h">
+      <Filter>02. 게임 장면\03. 인게임</Filter>
+    </ClInclude>
+    <ClInclude Include="CBackground.h">
+      <Filter>03. 오브젝트\01. 배경</Filter>
+    </ClInclude>
+    <ClInclude Include="CInput.h">
+      <Filter>01. GameFramework\02. Input</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayer.h">
+      <Filter>03. 오브젝트\02. 캐릭터</Filter>
+    </ClInclude>
+    <ClInclude Include="CBullet.h">
+      <Filter>03. 오브젝트\03. 총알</Filter>
+    </ClInclude>
+    <ClInclude Include="CItem.h">
+      <Filter>03. 오브젝트\04. 아이템</Filter>
+    </ClInclude>
+    <ClInclude Include="CHealing.h">
+      <Filter>03. 오브젝트\04. 아이템\03. 체력회복</Filter>
+    </ClInclude>
+    <ClInclude Include="CMagazine.h">
+      <Filter>03. 오브젝트\04. 아이템\02. 탄창</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoom.h">
+      <Filter>03. 오브젝트\04. 아이템\01. 수류탄</Filter>
+    </ClInclude>
+    <ClInclude Include="CHPBar.h">
+      <Filter>03. 오브젝트\05. UI\01. 체력바</Filter>
+    </ClInclude>
+    <ClInclude Include="CHPGauge.h">
+      <Filter>03. 오브젝트\05. UI\01. 체력바</Filter>
+    </ClInclude>
+    <ClInclude Include="CNetwork.h">
+      <Filter>00. Network</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="APIClient.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameFramework.cpp">
+      <Filter>01. GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>01. GameFramework\01. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimation.cpp">
+      <Filter>01. GameFramework\05. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="CScene.cpp">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CSceneManager.cpp">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CSceneScript.cpp">
+      <Filter>01. GameFramework\03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CGameObject.cpp">
+      <Filter>01. GameFramework\04. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>01. GameFramework\05. Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CInGame.cpp">
+      <Filter>02. 게임 장면\03. 인게임</Filter>
+    </ClCompile>
+    <ClCompile Include="CBackground.cpp">
+      <Filter>03. 오브젝트\01. 배경</Filter>
+    </ClCompile>
+    <ClCompile Include="CInput.cpp">
+      <Filter>01. GameFramework\02. Input</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayer.cpp">
+      <Filter>03. 오브젝트\02. 캐릭터</Filter>
+    </ClCompile>
+    <ClCompile Include="CBullet.cpp">
+      <Filter>03. 오브젝트\03. 총알</Filter>
+    </ClCompile>
+    <ClCompile Include="CItem.cpp">
+      <Filter>03. 오브젝트\04. 아이템</Filter>
+    </ClCompile>
+    <ClCompile Include="CHealing.cpp">
+      <Filter>03. 오브젝트\04. 아이템\03. 체력회복</Filter>
+    </ClCompile>
+    <ClCompile Include="CMagazine.cpp">
+      <Filter>03. 오브젝트\04. 아이템\02. 탄창</Filter>
+    </ClCompile>
+    <ClCompile Include="CBoom.cpp">
+      <Filter>03. 오브젝트\04. 아이템\01. 수류탄</Filter>
+    </ClCompile>
+    <ClCompile Include="CHPBar.cpp">
+      <Filter>03. 오브젝트\05. UI\01. 체력바</Filter>
+    </ClCompile>
+    <ClCompile Include="CHPGauge.cpp">
+      <Filter>03. 오브젝트\05. UI\01. 체력바</Filter>
+    </ClCompile>
+    <ClCompile Include="CNetwork.cpp">
+      <Filter>00. Network</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="APIClient.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="APIClient.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="icon1.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
