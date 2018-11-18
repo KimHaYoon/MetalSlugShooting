@@ -16,6 +16,8 @@ private:
 	bool		m_bChange;		// ÅºÃ¢ ±³È¯
 	float		m_fChangeTime;
 
+	class CBullet	m_pBullet[100];
+
 public:
 	PlayerInfo GetPlayerInfo()	const;
 	int	GetHP() const;

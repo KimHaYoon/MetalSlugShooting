@@ -103,6 +103,24 @@ void CNetwork::Update()
 void CNetwork::Render(HDC hdc)
 {
 	TCHAR str[128] = {};
-	wsprintf(str, L"GameState : %d", m_iGameState);
+	if (m_iGameState == GAME_READY)
+	{
+		wsprintf(str, L"GameState : Game 대기중");
+	}
+
+	else if (m_iGameState == GAME_OK)
+	{
+		wsprintf(str, L"GameState : Game 준비완료");
+	}
+
+	else if (m_iGameState == GAME_PLAY)
+	{
+		wsprintf(str, L"GameState : Game 플레이상태");
+	}
+
+	else if (m_iGameState == GAME_END)
+	{
+		wsprintf(str, L"GameState : Game 종료상태");
+	}
 	TextOut(hdc, 400, 100, str, lstrlen(str));
 }
