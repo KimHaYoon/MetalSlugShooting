@@ -44,6 +44,8 @@ public:
 	int		GetClientNum() const;
 	DATA	GetData()	const;
 
+	int		GetGameState()	const;
+
 public:
 	void	SetClientNum(int Num);
 	void	SetKeyData(int key);

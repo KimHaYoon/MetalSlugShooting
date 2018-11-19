@@ -40,6 +40,11 @@ DATA CNetwork::GetData() const
 	return m_tData;
 }
 
+int CNetwork::GetGameState() const
+{
+	return m_iGameState;
+}
+
 bool CNetwork::Init()
 {
 	int retval;
