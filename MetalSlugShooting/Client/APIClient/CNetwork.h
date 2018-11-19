@@ -1,6 +1,11 @@
 #pragma once
 #include "Client.h"
 
+//===============¼­¹ö°ü·Ã==================
+#define SERVERIP	"192.168.26.147"
+#define SERVERPORT	9000
+#define BUFSIZE		100000
+
 class CNetwork
 {
 	// ½Ì±ÛÅæ 

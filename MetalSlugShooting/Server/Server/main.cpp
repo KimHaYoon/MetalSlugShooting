@@ -192,11 +192,11 @@ void Input(int id, SOCKET sock, float fTime)
 	if (g_iGameState != GAME_PLAY)
 		return;
 
-	EnterCriticalSection(&cs);
+	//EnterCriticalSection(&cs);
 	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
 
 	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
-	LeaveCriticalSection(&cs);
+	//LeaveCriticalSection(&cs);
 
 	if (id + 1 != g_tKeyData.num)			// id가 이 keydata의 num과 같지않으면 입력받은 키 데이터 처리를 안할거예욧!
 	{
@@ -317,10 +317,10 @@ void Input(int id, SOCKET sock, float fTime)
 
 void Update(int id, SOCKET sock, float fTime)
 {
-	EnterCriticalSection(&cs);
+	//EnterCriticalSection(&cs);
 	send(sock, (char*)&g_iGameState, sizeof(int), 0);
 	cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
-	LeaveCriticalSection(&cs);
+	//LeaveCriticalSection(&cs);
 
 	if (g_iGameState == GAME_READY)
 	{
@@ -335,7 +335,7 @@ void Update(int id, SOCKET sock, float fTime)
 	if (g_iGameState == GAME_OK)
 	{
 		g_fTime += fTime;
-		cout << g_fTime << endl;
+		//cout << g_fTime << endl;
 		if (g_fTime > 1.f)
 		{
 			g_iGameState = GAME_PLAY;
@@ -349,11 +349,11 @@ void Update(int id, SOCKET sock, float fTime)
 
 		BulletUpdate(id);
 
-		EnterCriticalSection(&cs);
+		//EnterCriticalSection(&cs);
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
 		cout << id + 1<< "P에게 데이터 보냄" << endl;
-		cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
-		LeaveCriticalSection(&cs);
+		//cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
+		//LeaveCriticalSection(&cs);
 	}
 }
 

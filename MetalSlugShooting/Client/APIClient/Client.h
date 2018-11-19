@@ -21,11 +21,6 @@ using namespace std;
 #define DEFAULT_MID_HEIGHT 200.f
 #define BOOM_DIST 500.f
 
-//===============서버관련==================
-#define SERVERIP	"192.168.26.147"
-#define SERVERPORT	9000
-#define BUFSIZE		100000
-
 // network class 는 싱글톤으로 작성
 #define GET_NETWORKINST		CNetwork::GetInstance()
 #define DESTROY_NETWORK		CNetwork::DestroyInstance();
