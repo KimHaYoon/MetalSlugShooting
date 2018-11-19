@@ -1,5 +1,5 @@
 ﻿  main.cpp
-c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(218): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(225): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(405): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(222): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(229): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\main.cpp(420): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Server.vcxproj -> C:\Users\HaYoon\Documents\GitHub\MetalSlugShooting\MetalSlugShooting\Server\Debug\Server.exe

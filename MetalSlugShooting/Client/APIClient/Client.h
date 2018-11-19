@@ -22,7 +22,7 @@ using namespace std;
 #define BOOM_DIST 500.f
 
 //===============서버관련==================
-#define SERVERIP	"127.0.0.1"
+#define SERVERIP	"192.168.26.147"
 #define SERVERPORT	9000
 #define BUFSIZE		100000
 

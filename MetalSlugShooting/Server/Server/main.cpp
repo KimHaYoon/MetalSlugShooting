@@ -140,10 +140,12 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int addrlen;
 	int client_id;
 
+	EnterCriticalSection(&cs);
 	addrlen = sizeof(clientaddr);
 	getpeername(client_sock, (SOCKADDR *)&clientaddr, &addrlen);
 	client_id = g_iConnectNum;
 	++g_iConnectNum;
+	LeaveCriticalSection(&cs);
 
 	while (g_iGameState != GAME_END)
 	{
@@ -159,7 +161,9 @@ void Logic(int client_id, SOCKET sock)
 {
 	g_Timer->Update();
 
+	EnterCriticalSection(&cs);
 	float fTime = g_Timer->GetDeltaTime();
+	LeaveCriticalSection(&cs);
 	cout << fTime << endl;
 	Input(client_id, sock, fTime);
 	Update(client_id, sock, fTime);
@@ -188,11 +192,11 @@ void Input(int id, SOCKET sock, float fTime)
 	if (g_iGameState != GAME_PLAY)
 		return;
 
-	//EnterCriticalSection(&cs);
+	EnterCriticalSection(&cs);
 	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
-	//LeaveCriticalSection(&cs);
 
 	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
+	LeaveCriticalSection(&cs);
 
 	if (id + 1 != g_tKeyData.num)			// id가 이 keydata의 num과 같지않으면 입력받은 키 데이터 처리를 안할거예욧!
 	{
@@ -313,11 +317,20 @@ void Input(int id, SOCKET sock, float fTime)
 
 void Update(int id, SOCKET sock, float fTime)
 {
+	EnterCriticalSection(&cs);
 	send(sock, (char*)&g_iGameState, sizeof(int), 0);
 	cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
+	LeaveCriticalSection(&cs);
 
 	if (g_iGameState == GAME_READY)
-		g_iGameState = GAME_OK;
+	{
+		cout << "ConnectCount : " << g_iConnectNum << endl;
+		if (g_iConnectNum == 2)
+		{
+			cout << "Client 둘다 접속" << endl;
+			g_iGameState = GAME_OK;
+		}
+	}
 
 	if (g_iGameState == GAME_OK)
 	{
@@ -336,9 +349,11 @@ void Update(int id, SOCKET sock, float fTime)
 
 		BulletUpdate(id);
 
+		EnterCriticalSection(&cs);
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
 		cout << id + 1<< "P에게 데이터 보냄" << endl;
 		cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
+		LeaveCriticalSection(&cs);
 	}
 }
 
@@ -356,16 +371,16 @@ void DataInit()
 	g_tData.player[0].y = 500;
 	g_tData.player[0].magazinecnt = 2;
 	g_tData.player[0].boomcnt = 0;
-	g_tData.player[0].bulletcnt = 10;
+	g_tData.player[0].bulletcnt = 100;
 	g_tData.player[0].hp = 30;
 	g_tData.player[0].dir = 1;
 
 	g_tData.player[1].num = 2;
-	g_tData.player[1].x = 900;
+	g_tData.player[1].x = 500;
 	g_tData.player[1].y = 500;
 	g_tData.player[1].magazinecnt = 2;
 	g_tData.player[1].boomcnt = 0;
-	g_tData.player[1].bulletcnt = 10;
+	g_tData.player[1].bulletcnt = 100;
 	g_tData.player[1].hp = 100;
 	g_tData.player[1].dir = -1;
 
