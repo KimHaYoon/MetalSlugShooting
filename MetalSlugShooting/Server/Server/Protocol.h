@@ -2,6 +2,7 @@
 
 #define PLAYER_WIDTH	150		// 플레이어 가로크기
 #define PLAYER_HEIGHT	100		// 플레이어 세로크기
+#define PLAYER_SIT_HEIGHT 50	// 플레이어 앉을때 세로 크기
 #define BULLET_SIZE		20		// 총알 크기 20x20
 #define ITEM_SIZE		50		// 아이템 사이즈
 #define WIN_WIDTH		1280	// 화면 가로크기
@@ -13,7 +14,13 @@
 #define LEFT_KEY		3		// 키보드 방향키 ←
 #define RIGHT_KEY		4		// 키보드 방향키 →
 #define DOWN_KEY		5		// 키보드 방향키 ↓
-#define SHOOT_KEY		6		// 총알발사
+#define SHOOT_KEY		6		// 제자리에서 총알발사
+#define SHOOT_LEFT_KEY	7		// 왼쪽 총알 발삿!
+#define SHOOT_RIGHT_KEY 8		// 오른쪽 총알 발사!
+#define BOOM_LEFT_KEY	9		// 왼쪽으로 폭탄 발사!
+#define BOOM_RIGHT_KEY	10		// 오른쪽으로 폭탄 발사!
+#define CHANGEM_LEGT_KEY	11	// 왼쪽에서 장전!
+#define CHANGEM_RIGHt_KEY	12	// 오른쪽에서 장전!
 
 #define PLAYERMAX		2
 #define MAXCOUNT		100
@@ -32,7 +39,8 @@ struct PlayerInfo
 	int bulletcnt;		// 총알수
 	int hp;				// 현재 HP
 	int dir;			// 바라보는 방향 -1:왼 1:오
-};						// 32byte
+	int state;			// 현재상태 -> 애니메이션 출력 때문에...
+};						// 36byte
 
 struct BulletInfo
 {
@@ -50,11 +58,21 @@ struct ItemInfo
 	int y;				// 좌표 y
 };						// 12byte
 
+struct BoomInfo
+{
+	int num;
+	int x;
+	int y;
+	int dir;
+	bool shoot;
+};
+
 struct DATA
 {
 	int  num;									// 1P, 2P
 	PlayerInfo	player[PLAYERMAX];				// 플레이어 정보
 	BulletInfo  bullet[PLAYERMAX][MAXCOUNT];	// 총알 정보
+	//BoomInfo	boom[PLAYERMAX][3];				// 수류탄 정보
 };
 
 struct Key_DATA

@@ -52,7 +52,7 @@ bool CInGame::Init()
 	}
 
 	m_pPlayer[0]->SetPlayerInfo(tData.player[0]);
-	m_pPlayer[0]->SetTexture("Player1", m_hInst, m_hDC, L"Texture/Player_LEFT.bmp", true, RGB(0.f, 0.f, 0.f));
+	m_pPlayer[0]->SetTexture("Player1", m_hInst, m_hDC, L"Texture/1P_ALL.bmp", true, RGB(86.f, 177.f, 222.f));
 	m_pPlayer[0]->SetInput(m_pScene->GetInput());
 	//m_pPlayer[0]->SetScene(m_pScene);
 	m_pScene->AddObject(m_pPlayer[0]);
@@ -66,7 +66,7 @@ bool CInGame::Init()
 	}
 
 	m_pPlayer[1]->SetPlayerInfo(tData.player[1]);
-	m_pPlayer[1]->SetTexture("Player2", m_hInst, m_hDC, L"Texture/Player_LEFT.bmp", true, RGB(0.f, 0.f, 0.f));
+	m_pPlayer[1]->SetTexture("Player2", m_hInst, m_hDC, L"Texture/2P_ALL.bmp", true, RGB(255.f, 255.f, 255.f));
 	m_pPlayer[1]->SetInput(m_pScene->GetInput());
 	m_pPlayer[1]->SetScene(m_pScene);
 	m_pScene->AddObject(m_pPlayer[1]);

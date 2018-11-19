@@ -50,11 +50,6 @@ void CPlayer::SetBulletInfo(BulletInfo* info)
 	}
 }
 
-void CPlayer::CreateBullet()
-{
-
-}
-
 void CPlayer::ChangeMagazine()
 {
 	m_bChange = false;
@@ -72,6 +67,7 @@ void CPlayer::ChangeMagazine()
 
 void CPlayer::CreateBoom()
 {
+	/*
 	if (m_tInfo.boomcnt < 1)
 		return;
 
@@ -87,11 +83,8 @@ void CPlayer::CreateBoom()
 		}
 	}
 
-	pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
-
-
 	m_pScene->AddObject(pBoom);
-	m_tInfo.boomcnt -= 1;
+	m_tInfo.boomcnt -= 1;*/
 }
 
 bool CPlayer::Init()
@@ -100,13 +93,22 @@ bool CPlayer::Init()
 	m_bChange = false;
 	m_fChangeTime = 0.f;
 	m_bScene = false;
+	m_iIdle = -1;		// 아무것도 입력 안받은 상태 (초기화)
 
-	CreateAnimation("Man", AT_LINE, AO_LOOP, 1200, 1000, 6, 5, 1.f);
+	CreateAnimation("Man", AT_LINE, AO_LOOP, 2000, 1200, 10, 12, 1.f);
+	m_pAnimation->AddLineFrameCount(4);								// 가로 프레임 개수
+	m_pAnimation->AddLineFrameCount(4);
+	m_pAnimation->AddLineFrameCount(8);
+	m_pAnimation->AddLineFrameCount(8);
+	m_pAnimation->AddLineFrameCount(6);
+	m_pAnimation->AddLineFrameCount(6);
+	m_pAnimation->AddLineFrameCount(10);
+	m_pAnimation->AddLineFrameCount(10);
+	m_pAnimation->AddLineFrameCount(4);
 	m_pAnimation->AddLineFrameCount(4);
 	m_pAnimation->AddLineFrameCount(6);
 	m_pAnimation->AddLineFrameCount(6);
-	m_pAnimation->AddLineFrameCount(2);
-	m_pAnimation->AddLineFrameCount(2);
+
 
 	m_pAnimation->ChangeAnimation(0);
 	
@@ -123,18 +125,33 @@ void CPlayer::Input(float fTime)
 
 	if (m_pInput->KeyPush("MoveLeft"))
 	{
+		if (m_iIdle == 0)
+			return;
+
 		GET_NETWORKINST->SetKeyData(LEFT_KEY);
-		m_pAnimation->ChangeAnimation(1);
 	}
 
 	else if (m_pInput->KeyPush("MoveRight"))
 	{
+		if (m_iIdle == 0)
+			return;
+
 		GET_NETWORKINST->SetKeyData(RIGHT_KEY);
-		m_pAnimation->ChangeAnimation(2);
+	}
+
+	else if (m_pInput->KeyPush("MoveDown"))
+	{
+		if (m_iIdle == 0)
+			return;
+
+		GET_NETWORKINST->SetKeyData(DOWN_KEY); 
 	}
 
 	else if (m_pInput->KeyDown("Shoot"))
 	{
+		if (m_iIdle == 0)
+			return;
+
 		GET_NETWORKINST->SetKeyData(SHOOT_KEY);
 	}
 
@@ -145,7 +162,10 @@ void CPlayer::Input(float fTime)
 
 	else if (m_pInput->KeyDown("Boom"))
 	{
-		CreateBoom();
+		if (m_iIdle == 0)
+			return;
+
+		//GET_NETWORKINST->SetKeyData(Q_KEY);
 	}
 
 	else if (m_pInput->KeyDown("HPUP"))
@@ -162,8 +182,10 @@ void CPlayer::Input(float fTime)
 
 	else
 	{
+		if (m_iIdle == 0)
+			return;
+
 		GET_NETWORKINST->SetKeyData(NONE_KEY);
-		m_pAnimation->ChangeAnimation(0);
 	}
 }
 
@@ -178,6 +200,13 @@ void CPlayer::Update(float fTime)
 			m_pBullet[i].Init();
 			m_pBullet[i].SetTexture("Bullet", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Bullet.bmp", true, RGB(0, 248, 0));
 		}		
+
+		/*for (int i = 0; i < 3; ++i)
+		{
+			m_pBoom[i].Init();	
+			m_pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
+
+		}*/
 
 		m_bScene = true;			// 씬 채워줬으니 true 
 	}
@@ -199,6 +228,27 @@ void CPlayer::Update(float fTime)
 	{
 		m_pBullet[i].Update(fTime);
 	}
+
+	/*for (int i = 0; i < 3; ++i)
+	{
+		m_pBoom[i].Update(fTime);
+	}*/
+
+	if (m_pAnimation->GetCurrentAnimation() == 2 || m_pAnimation->GetCurrentAnimation() == 3 || 
+		m_pAnimation->GetCurrentAnimation() == 10 || m_pAnimation->GetCurrentAnimation() == 11)
+	{
+		m_iIdle = 0;
+		if (m_pAnimation->GetAnimationFrameEnd())
+		{
+			m_iIdle = 1;
+		}
+	}
+
+	if (m_iIdle == 0)
+		return;
+
+	m_pAnimation->ChangeAnimation(m_tInfo.state);
+
 }
 
 void CPlayer::Render(HDC hDC, float fTime)
@@ -210,6 +260,11 @@ void CPlayer::Render(HDC hDC, float fTime)
 	{
 		m_pBullet[i].Render(hDC, fTime);
 	}
+
+	/*for (int i = 0; i < 3; ++i)
+	{
+		m_pBoom[i].Render(hDC, fTime);
+	}*/
 
 	TCHAR str[128];
 	if (m_tInfo.num == 1)

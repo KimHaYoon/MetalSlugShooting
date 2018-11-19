@@ -1,6 +1,7 @@
 #pragma once
 #include "CGameObject.h"
 #include "CBullet.h"
+#include "CBoom.h"
 
 class CPlayer : public CGameObject
 {
@@ -18,8 +19,10 @@ private:
 	float		m_fChangeTime;
 
 	CBullet		m_pBullet[MAXCOUNT];
+	CBoom		m_pBoom[3];
 
 	bool		m_bScene;		// 굳이 씬 여러번 채워줄 필요없으니까
+	int			m_iIdle;
 
 public:
 	PlayerInfo GetPlayerInfo()	const;
@@ -31,7 +34,7 @@ public:
 	void SetBulletInfo(BulletInfo* info);
 
 private:
-	void CreateBullet();
+	//void CreateBullet();
 	void ChangeMagazine();
 	void CreateBoom();
 

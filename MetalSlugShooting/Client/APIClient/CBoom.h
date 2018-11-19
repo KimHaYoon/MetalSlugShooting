@@ -18,7 +18,7 @@ private:
 	bool		m_bCalcPos;
 
 public:
-	virtual bool Init(float2 fPos, int dir = 0);
+	virtual bool Init();
 	virtual void Input(float fTime);
 	virtual void Update(float fTime);
 	virtual void Render(HDC hDC, float fTime);

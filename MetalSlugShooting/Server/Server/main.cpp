@@ -24,6 +24,7 @@ int	g_iConnectNum = 0;
 char buf[BUFSIZE] = {};
 
 int g_iBulletCount[PLAYERMAX] = {};
+int g_iBoomCount[3] = {};
 //=====================================================================
 
 // 클라이언트와 데이터 통신 스레드함수
@@ -38,6 +39,7 @@ void Update(int id, SOCKET sock, float fTime);
 
 void DataInit();
 void BulletUpdate(int id);
+//void BoonUpdate(int id);
 
 int main(int argc, char *argv[])
 {
@@ -192,16 +194,49 @@ void Input(int id, SOCKET sock, float fTime)
 
 	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
 
+	if (id + 1 != g_tKeyData.num)			// id가 이 keydata의 num과 같지않으면 입력받은 키 데이터 처리를 안할거예욧!
+	{
+		return;
+	}
+
+	if (g_tKeyData.key == NONE_KEY)
+	{
+		if (g_tData.player[id].dir == -1)
+		{
+			g_tData.player[id].state = 0;
+		}
+
+		else
+		{
+			g_tData.player[id].state = 1;
+		}
+	}
+
 	if (g_tKeyData.key == LEFT_KEY)
 	{
 		g_tData.player[id].dir = -1;
-		g_tData.player[id].x -= PLAYER_SPEED;
+		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+		g_tData.player[id].state = 4;
 	}
 
 	if (g_tKeyData.key == RIGHT_KEY)
 	{
 		g_tData.player[id].dir = 1;
-		g_tData.player[id].x += PLAYER_SPEED;
+		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+		g_tData.player[id].state = 5;
+	}
+
+	if (g_tKeyData.key == DOWN_KEY)
+	{
+		if (g_tData.player[id].dir == -1)
+		{
+			g_tData.player[id].state = 8;
+		}
+
+		else
+		{
+			g_tData.player[id].state = 9;
+		}
 	}
 
 	if (g_tKeyData.key == SHOOT_KEY)
@@ -210,7 +245,18 @@ void Input(int id, SOCKET sock, float fTime)
 			return;
 
 		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
-		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+		g_tData.player[id].bulletcnt -= 1;	// id의 보유한 총알 감소
+	
+		if (g_tData.player[id].dir == -1)
+		{
+			g_tData.player[id].state = 2;
+		}
+
+		else
+		{
+			g_tData.player[id].state = 3;
+		}
+		
 		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
 		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
 		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
@@ -219,12 +265,56 @@ void Input(int id, SOCKET sock, float fTime)
 		
 		cout << "CreateBullet" << endl;
 	}
+
+	/*if (g_tKeyData.key == Q_KEY)
+	{
+		if (g_tData.player[id].boomcnt< 1)
+			return;
+	}*/
+
+	/*if (g_tKeyData.key == SHOOT_LEFT_KEY)
+	{
+		if (g_tData.player[id].bulletcnt < 1)
+			return;
+
+		g_tData.player[id].dir = -1;
+		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+
+		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
+		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
+		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
+		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
+		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
+
+		cout << "CreateBullet" << endl; 		
+	}
+
+	if (g_tKeyData.key == SHOOT_RIGHT_KEY)
+	{
+		if (g_tData.player[id].bulletcnt < 1)
+			return;
+		g_tData.player[id].dir = 1;
+		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+
+		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
+		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
+		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
+		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
+		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
+
+		cout << "CreateBullet" << endl;
+	}
+	*/
 }
 
 void Update(int id, SOCKET sock, float fTime)
 {
 	send(sock, (char*)&g_iGameState, sizeof(int), 0);
-	cout << id + 1 << "P : SendGameState -> " << g_iGameState << endl;
+	cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
 
 	if (g_iGameState == GAME_READY)
 		g_iGameState = GAME_OK;
@@ -233,9 +323,10 @@ void Update(int id, SOCKET sock, float fTime)
 	{
 		g_fTime += fTime;
 		cout << g_fTime << endl;
-		if (g_fTime > 10.f)
+		if (g_fTime > 1.f)
 		{
 			g_iGameState = GAME_PLAY;
+			g_fTime = 0;
 		}
 	}
 
@@ -246,7 +337,8 @@ void Update(int id, SOCKET sock, float fTime)
 		BulletUpdate(id);
 
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
-		cout << id + 1 << "P에게 데이터 보냄" << endl;
+		cout << id + 1<< "P에게 데이터 보냄" << endl;
+		cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
 	}
 }
 
@@ -289,7 +381,17 @@ void DataInit()
 			g_tData.bullet[i][j].shoot = false;
 		}
 
+		/*for (int j = 0; j < 3; ++j)
+		{
+			g_tData.boom[i][j].x = -300;
+			g_tData.boom[i][j].y = -300;
+			g_tData.boom[i][j].dir = 0;
+			g_tData.boom[i][j].num = i;
+			g_tData.boom[i][j].shoot = false;
+		}*/
+
 		g_iBulletCount[i] = 0;
+		g_iBoomCount[i] = 0;
 	}
 }
 

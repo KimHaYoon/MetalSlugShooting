@@ -46,6 +46,16 @@ public:
 		return m_tInfo.fLimitTime;
 	}
 
+	UINT GetFrameX()	const
+	{
+		return m_tInfo.iFrameX;
+	}
+
+	UINT GetCurrentAnimation()	const
+	{
+		return m_iCurrentAnimation;
+	}
+
 public:
 	void SetAnimationStart(bool bAnimationStart)
 	{

@@ -15,12 +15,9 @@ CBoom::~CBoom()
 {
 }
 
-bool CBoom::Init(float2 fPos, int dir)
+bool CBoom::Init()
 {
-	m_fPos = fPos;
-	m_iDir = dir;
-
-	m_fTargetPos.x = fPos.x + BOOM_DIST * m_iDir;
+	m_fTargetPos.x = m_fPos.x + BOOM_DIST * m_iDir;
 	m_fTargetPos.y = 600.f;
 
 	m_fMu = 0.f;
