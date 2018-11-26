@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CNetwork.h"
+#include <fstream>
 
 CNetwork* CNetwork::m_pInst = NULL;
 
@@ -47,6 +48,7 @@ int CNetwork::GetGameState() const
 
 bool CNetwork::Init()
 {
+	LoadServerIPAddress();
 	int retval;
 
 	WSADATA wsa;
@@ -68,7 +70,7 @@ bool CNetwork::Init()
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = inet_addr(SERVERIP);
+	serveraddr.sin_addr.s_addr = inet_addr(m_ServerIP.c_str());
 	serveraddr.sin_port = htons(SERVERPORT);
 	retval = connect(m_Sock, (SOCKADDR *)&serveraddr, sizeof(serveraddr));
 	
@@ -128,4 +130,53 @@ void CNetwork::Render(HDC hdc)
 		wsprintf(str, L"GameState : Game 종료상태");
 	}
 	TextOut(hdc, 400, 100, str, lstrlen(str));
+}
+
+void CNetwork::LoadServerIPAddress()
+{
+	TCHAR	strPath[MAX_PATH] = {};
+	GetModuleFileName(NULL, strPath, MAX_PATH);
+
+	for (int i = lstrlen(strPath) - 1; i >= 0; --i)
+	{
+		if (strPath[i] == '\\' || strPath[i] == '/')
+		{
+			memset(&strPath[i + 1], 0, sizeof(TCHAR) * (MAX_PATH - (i + 1)));
+			break;
+		}
+	}
+
+	char Path[MAX_PATH] = {};
+
+	WideCharToMultiByte(CP_ACP, 0, strPath, -1, Path, lstrlen(strPath), NULL, NULL);
+
+	string FullPath = Path;
+	FullPath += "ServerIPAddress.txt";
+
+
+	FILE* pFile = NULL;
+
+	fopen_s(&pFile, FullPath.c_str(), "rb");
+
+	if (!pFile)
+		return;
+
+	wchar_t temp[128] = {};
+	wchar_t ip[128] = {};
+	char cip[128] = {};
+
+	while (1)
+	{
+		if (fwscanf_s(pFile, L"%s", temp, 128) == -1)
+			break;
+
+		if (!wcscmp(temp, L"[SERVERIP]"))
+		{
+			fwscanf_s(pFile, L"%s", &ip, 128);
+			WideCharToMultiByte(CP_ACP, 0, ip, -1, cip, lstrlen(ip), 0, 0);
+			m_ServerIP = cip;
+		}
+	}
+
+	fclose(pFile);
 }

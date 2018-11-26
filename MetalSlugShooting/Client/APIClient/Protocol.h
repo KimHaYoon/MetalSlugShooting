@@ -23,7 +23,7 @@
 #define CHANGEM_RIGHt_KEY	12	// 오른쪽에서 장전!
 
 #define PLAYERMAX		2	
-#define MAXCOUNT		100
+#define MAXCOUNT		50
 
 struct PlayerInfo
 {

@@ -4,7 +4,7 @@
 //===============서버관련==================
 #define SERVERIP	"192.168.26.147"
 #define SERVERPORT	9000
-#define BUFSIZE		100000
+#define BUFSIZE		5000
 
 class CNetwork
 {
@@ -44,6 +44,8 @@ private:
 	Key_DATA			m_tKeyData;
 	int					m_iGameState;
 
+	string				m_ServerIP;
+
 public:
 	SOCKET	GetSock()	const;
 	int		GetClientNum() const;
@@ -60,5 +62,8 @@ public:
 	void Input();		// SendKeyData
 	void Update();
 	void Render(HDC hdc);
+
+private:
+	void LoadServerIPAddress();
 };
 
