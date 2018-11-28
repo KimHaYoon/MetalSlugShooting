@@ -8,8 +8,9 @@ public:
 	~CTimer();
 
 private:
-	LARGE_INTEGER	m_tTime;
+	LARGE_INTEGER	m_tPrev;
 	LARGE_INTEGER	m_tSecond;
+	bool			m_bStartUpdate;
 	float			m_fDeltaTime;
 	float			m_fLimitTime;
 	bool			m_bLimit;

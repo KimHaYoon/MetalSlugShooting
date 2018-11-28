@@ -11,8 +11,8 @@ int g_iGameState = GAME_READY;
 
 CTimer* g_Timer = NULL;				// Timer class
 
-float g_fTime = 0.f;				// 현재 시간
-float g_fTimeLimit = 90.f;			// 한계 시간
+float g_fTime[PLAYERMAX];				// 현재 시간
+float g_fTimeLimit[PLAYERMAX];			// 한계 시간
 
 float g_fInputTime = 0.f;
 
@@ -164,11 +164,12 @@ void Logic(int client_id, SOCKET sock)
 
 	//cout << g_Timer->GetLimit() << endl;
 
-	float fTime = g_Timer->GetDeltaTime();
-	//cout << fTime << endl;
 
-	if (!g_Timer->GetLimit())
+	if (g_Timer->GetLimit())
 	{
+		float fTime = g_Timer->GetDeltaTime();
+		cout << fTime << endl;
+
 		Input(client_id, sock, fTime);
 		Update(client_id, sock, fTime);
 	}
@@ -325,35 +326,33 @@ void Input(int id, SOCKET sock, float fTime)
 
 void Update(int id, SOCKET sock, float fTime)
 {
-	//EnterCriticalSection(&cs);
 	send(sock, (char*)&g_iGameState, sizeof(int), 0);
-	//cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
-	//LeaveCriticalSection(&cs);
+	cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
 
 	if (g_iGameState == GAME_READY)
 	{
 		//cout << "ConnectCount : " << g_iConnectNum << endl;
 		if (g_iConnectNum == 2)
 		{
-			//cout << "Client 둘다 접속" << endl;
+			cout << "Client 둘다 접속" << endl;
 			g_iGameState = GAME_OK;
 		}
 	}
 
 	if (g_iGameState == GAME_OK)
 	{
-		g_fTime += fTime;
-		//cout << g_fTime << endl;
-		if (g_fTime > 1.f)
+		g_fTime[id] += fTime;
+		//cout << id + 1 << "P Time" << g_fTime[id] << endl;
+		if (g_fTime[id] > 1.f)
 		{
 			g_iGameState = GAME_PLAY;
-			g_fTime = 0;
+			g_fTime[id] = 0.f;
 		}
 	}
 
 	if (g_iGameState == GAME_PLAY)
 	{
-		g_fTimeLimit -= fTime;
+		g_fTimeLimit[id] -= fTime;
 
 		BulletUpdate(id);
 
@@ -415,6 +414,9 @@ void DataInit()
 
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
+
+		g_fTimeLimit[i] = 90.f;
+		g_fTime[i] = 0.f;
 	}
 }
 

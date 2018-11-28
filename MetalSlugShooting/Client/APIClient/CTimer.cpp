@@ -26,14 +26,17 @@ bool CTimer::Init()
 	m_fFPSTime = 0.f;
 	m_iFrame = 0;
 	m_iFrameLimit = 60;
+	m_fLimitTime = 1.f / 60.f;
+	m_bLimit = false;
 	m_bStartUpdate = false;
+	m_fAccTime = 0.f;
 
 	return true;
 }
 
 void CTimer::Update()
 {
-	if (!m_bStartUpdate)
+	/*if (!m_bStartUpdate)
 	{
 		m_bStartUpdate = true;
 		QueryPerformanceCounter(&m_tPrev);
@@ -60,7 +63,41 @@ void CTimer::Update()
 
 		sprintf_s(str, "DeltaTime : %f FPS : %f", m_fDeltaTime, m_fFPS);
 		SetWindowTextA(m_hWnd, str);
+	}*/
+
+	if (!m_bStartUpdate)
+	{
+		m_bStartUpdate = true;
+		QueryPerformanceCounter(&m_tPrev);
+		return;
 	}
+
+	LARGE_INTEGER	tTime;
+
+	QueryPerformanceCounter(&tTime);
+
+	m_fDeltaTime = (tTime.QuadPart - m_tPrev.QuadPart) /
+		(float)(m_tSecond.QuadPart);
+	
+	m_tPrev = tTime;
+
+	m_fAccTime += m_fDeltaTime;
+
+	if (m_fAccTime >= m_fLimitTime)
+	{
+		m_fAccTime -= m_fLimitTime;
+
+		//char	str[128] = {};
+
+		//sprintf_s(str, "1/30ÃÊ Áö³²");
+		//SetWindowTextA(m_hWnd, str);
+
+		m_bLimit = true;
+	}
+
+	else
+		m_bLimit = false;
+
 }
 
 void CTimer::Destroy()

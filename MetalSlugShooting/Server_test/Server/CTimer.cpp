@@ -29,43 +29,33 @@ bool CTimer::Init()
 	QueryPerformanceFrequency(&m_tSecond);
 
 	m_fDeltaTime = 0.f;
-	m_fLimitTime = 0.f;
-	m_bLimit = false;
+	m_fLimitTime = 1.f / 60.f;
+	m_bStartUpdate = false;
+	m_bLimit = true;
 	m_fFPS = 0.f;
 	m_fFPSTime = 0.f;
 	m_iFrame = 0;
 	m_iFrameMax = 60;
-	m_tTime.QuadPart = -1;
+	m_tPrev.QuadPart = -1;
 
 	return true;
 }
 
 void CTimer::Update()
 {
-	if (m_tTime.QuadPart == -1)
+	if (!m_bStartUpdate)
 	{
-		QueryPerformanceCounter(&m_tTime);
+		m_bStartUpdate = true;
+		QueryPerformanceCounter(&m_tPrev);
 		return;
 	}
 
 	LARGE_INTEGER	tTime;
 	QueryPerformanceCounter(&tTime);
 
-	m_fDeltaTime = (tTime.QuadPart - m_tTime.QuadPart) /
-		(float)(m_tSecond.QuadPart);
+	m_fDeltaTime = (tTime.QuadPart - m_tPrev.QuadPart) / (float)m_tSecond.QuadPart;
 
-	if (m_fLimitTime < (1 / 60.f))
-		m_bLimit = true;
-
-	else
-	{
-		m_bLimit = false;
-		m_fLimitTime -= (1 / 60.f);
-	}
-
-	m_fLimitTime += m_fDeltaTime;
-
-	m_tTime = tTime;
+	m_tPrev = tTime;
 
 	m_fFPSTime += m_fDeltaTime;
 	++m_iFrame;
@@ -73,11 +63,7 @@ void CTimer::Update()
 	if (m_iFrame == m_iFrameMax)
 	{
 		m_fFPS = m_iFrame / m_fFPSTime;
-
-		cout << m_fFPS << endl;
-
-		m_fFPSTime = 0.f;
-		m_fLimitTime = 0.f;
 		m_iFrame = 0;
+		m_fFPSTime = 0.f;
 	}
 }

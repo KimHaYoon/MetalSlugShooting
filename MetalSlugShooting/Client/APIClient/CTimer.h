@@ -18,12 +18,21 @@ private:
 	UINT			m_iFrame;
 	UINT			m_iFrameLimit;
 
+	float			m_fLimitTime;
+	bool			m_bLimit;
+	float			m_fAccTime;
+
 	HWND			m_hWnd;
 
 public:
 	float GetDeltaTime()	const
 	{
 		return m_fDeltaTime;
+	}
+
+	bool GetLimit()	const
+	{
+		return m_bLimit;
 	}
 
 
