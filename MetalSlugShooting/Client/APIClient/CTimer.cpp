@@ -28,6 +28,10 @@ bool CTimer::Init()
 	m_iFrameLimit = 60;
 	m_bStartUpdate = false;
 
+	m_fLimitTime = 1.f / 120.f;
+	m_fAccTime = 0.f;
+	m_bLimit = false;
+
 	return true;
 }
 
@@ -48,7 +52,21 @@ void CTimer::Update()
 	m_tPrev = tTime;
 
 	m_fFPSTime += m_fDeltaTime;
-	++m_iFrame;
+	m_fAccTime += m_fDeltaTime;
+
+	if (m_fAccTime >= m_fLimitTime)
+	{
+		m_fAccTime -= m_fLimitTime;
+
+		++m_iFrame;
+		m_bLimit = true;
+
+		_cprintf("1/30\n");
+	}
+
+	else
+		m_bLimit = false;
+
 
 	if (m_iFrame == m_iFrameLimit)
 	{

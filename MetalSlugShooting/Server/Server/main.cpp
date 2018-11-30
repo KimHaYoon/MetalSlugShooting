@@ -7,12 +7,13 @@
 
 
 //=====================================================================
+//int g_iGameState[PLAYERMAX] = {};
 int g_iGameState = GAME_READY;
 
-CTimer* g_Timer = NULL;				// Timer class
+CTimer* g_Timer[PLAYERMAX] = {};				// Timer class
 
-float g_fTime = 0.f;				// 현재 시간
-float g_fTimeLimit = 90.f;			// 한계 시간
+float g_fTime[PLAYERMAX] = {};				// 현재 시간
+float g_fTimeLimit[PLAYERMAX] = {};			// 한계 시간
 
 float g_fInputTime = 0.f;
 
@@ -148,7 +149,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	++g_iConnectNum;
 	LeaveCriticalSection(&cs);
 
-	while (g_iGameState != GAME_END)
+	g_Timer[client_id] = new CTimer;
+	g_Timer[client_id]->Init();
+
+	while (g_iGameState/*[client_id]*/ != GAME_END)
 	{
 		Logic(client_id, client_sock);
 	}
@@ -160,33 +164,31 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 void Logic(int client_id, SOCKET sock)
 {
-	g_Timer->Update();
+	g_Timer[client_id]->Update();
 
 	//cout << g_Timer->GetLimit() << endl;
 
-	float fTime = g_Timer->GetDeltaTime();
+	float fTime = g_Timer[client_id]->GetDeltaTime();
 	//cout << fTime << endl;
 
-	if (!g_Timer->GetLimit())
-	{
-		Input(client_id, sock, fTime);
-		Update(client_id, sock, fTime);
-	}
+	Input(client_id, sock, fTime);
+	Update(client_id, sock, fTime);
 }
 
 void Init()
 {
 	InitializeCriticalSection(&cs);
-	g_Timer = new CTimer;
-	g_Timer->Init();
 	
 	DataInit();
 }
 
 void Delete()
 {
-	delete g_Timer;
-	g_Timer = NULL;
+	delete g_Timer[0];
+	g_Timer[0] = NULL;
+
+	delete g_Timer[1];
+	g_Timer[1] = NULL;
 
 	g_bPlayerTimer[0] = false;
 	g_bPlayerTimer[1] = false;
@@ -197,19 +199,18 @@ void Delete()
 
 void Input(int id, SOCKET sock, float fTime)
 {
-	if (g_iGameState != GAME_PLAY)
+	if (g_iGameState/*[0]*/ != GAME_PLAY /*&& g_iGameState[1] != GAME_PLAY */)
 		return;
-
-	//EnterCriticalSection(&cs);
-	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
-
-	//cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
-	//LeaveCriticalSection(&cs);
 
 	if (id + 1 != g_tKeyData.num)			// id가 이 keydata의 num과 같지않으면 입력받은 키 데이터 처리를 안할거예욧!
 	{
 		return;
 	}
+
+	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
+	//EnterCriticalSection(&cs);
+	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
+	//LeaveCriticalSection(&cs);
 
 	if (g_tKeyData.key == NONE_KEY)
 	{
@@ -325,41 +326,42 @@ void Input(int id, SOCKET sock, float fTime)
 
 void Update(int id, SOCKET sock, float fTime)
 {
+	send(sock, (char*)&g_iGameState/*[id]*/, sizeof(int), 0);
 	//EnterCriticalSection(&cs);
-	send(sock, (char*)&g_iGameState, sizeof(int), 0);
-	//cout << id + 1<< "P : SendGameState -> " << g_iGameState << endl;
+	cout << id + 1<< "P : SendGameState -> " << g_iGameState/*[id]*/ << endl;
 	//LeaveCriticalSection(&cs);
 
-	if (g_iGameState == GAME_READY)
+	if (g_iGameState/*[id]*/ == GAME_READY)
 	{
 		//cout << "ConnectCount : " << g_iConnectNum << endl;
 		if (g_iConnectNum == 2)
 		{
 			//cout << "Client 둘다 접속" << endl;
-			g_iGameState = GAME_OK;
+			g_iGameState/*[id]*/ = GAME_OK;
 		}
 	}
 
-	if (g_iGameState == GAME_OK)
+	if (g_iGameState/*[id]*/ == GAME_OK)
 	{
-		g_fTime += fTime;
-		//cout << g_fTime << endl;
-		if (g_fTime > 1.f)
+		g_fTime[id] += fTime;
+		cout << id << "P : " << g_fTime[id] << endl;
+		if (g_fTime[id] > 1.f)
 		{
-			g_iGameState = GAME_PLAY;
-			g_fTime = 0;
+			g_iGameState/*[id]*/ = GAME_PLAY;
+			g_fTime[id] = 0;
+			g_fTimeLimit[id] = 90.f;
 		}
 	}
 
-	if (g_iGameState == GAME_PLAY)
+	if (g_iGameState/*[id]*/ == GAME_PLAY)
 	{
-		g_fTimeLimit -= fTime;
+		g_fTimeLimit[id] -= fTime;
 
 		BulletUpdate(id);
 
-		//EnterCriticalSection(&cs);
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
-		//cout << id + 1<< "P에게 데이터 보냄" << endl;
+		//EnterCriticalSection(&cs);
+		cout << id + 1<< "P에게 데이터 보냄" << endl;
 		//cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
 		//LeaveCriticalSection(&cs);
 	}
@@ -370,7 +372,6 @@ void DataInit()
 	cout << "Data 초기화" << endl;
 
 	g_iConnectNum = 0;
-	g_iGameState = GAME_READY;
 
 	g_tData.num = 0;
 
@@ -415,6 +416,7 @@ void DataInit()
 
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
+		g_iGameState/*[i] */= GAME_READY;
 	}
 }
 

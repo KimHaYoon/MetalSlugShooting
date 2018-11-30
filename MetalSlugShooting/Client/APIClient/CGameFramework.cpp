@@ -19,9 +19,9 @@ CGameFramework::CGameFramework() :
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(215);
 
-#ifdef _DEBUG
-	//AllocConsole();
-#endif
+//#ifdef _DEBUG
+	AllocConsole();
+//#endif
 }
 
 CGameFramework::~CGameFramework()
@@ -58,9 +58,9 @@ CGameFramework::~CGameFramework()
 
 	DESTROY_NETWORK
 
-#ifdef _DEBUG
-		//FreeConsole();
-#endif // _DEBUG
+//#ifdef _DEBUG
+		FreeConsole();
+//#endif // _DEBUG
 }
 
 bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * pClass, int iIconID, UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer)
@@ -139,21 +139,27 @@ void CGameFramework::Logic()
 
 	float fTime = m_pTimer->GetDeltaTime();
 
-	Input(fTime);
-	Update(fTime);
-	Render(fTime);
+	//if (m_pTimer->GetLimit())
+	{
+		Input(fTime);
+		Update(fTime);
+		Render(fTime);
+	}
 }
 
 void CGameFramework::Input(float fTime)
 {
 	m_pInput->Update(fTime);
 	m_pSceneManager->Input(fTime);
-	GET_NETWORKINST->Input();
+
+	if (m_pTimer->GetLimit())
+		GET_NETWORKINST->Input();
 }
 
 int CGameFramework::Update(float fTime)
 {
-	GET_NETWORKINST->Update();
+	if (m_pTimer->GetLimit())
+		GET_NETWORKINST->Update();
 
 	return m_pSceneManager->Update(fTime);
 }

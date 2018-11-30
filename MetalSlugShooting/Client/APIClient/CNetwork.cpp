@@ -91,15 +91,20 @@ void CNetwork::Input()
 	if (m_iGameState == GAME_PLAY)
 	{
 		send(m_Sock, (char*)&m_tKeyData, sizeof(Key_DATA), 0);
+		_cprintf("send KeyData \n");
 	}
 }
 
 void CNetwork::Update()
 {
 	recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
+	_cprintf("recv GameState %d\n", m_iGameState);
 	
-	if(m_iGameState == GAME_PLAY)
+	if (m_iGameState == GAME_PLAY)
+	{
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
+		_cprintf("recv Data \n");
+	}
 
 	//if (m_iGameState == GAME_PLAY)
 	//{
