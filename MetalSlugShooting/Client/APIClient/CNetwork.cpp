@@ -4,7 +4,9 @@
 
 CNetwork* CNetwork::m_pInst = NULL;
 
-CNetwork::CNetwork()
+CNetwork::CNetwork() : 
+	m_iGameState(GAME_READY),
+	m_bRecv(false)
 {
 }
 
@@ -79,9 +81,10 @@ bool CNetwork::Init()
 		return false;
 	}
 
-	recvn(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
-
+	recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
 	m_iClient = m_tData.num;
+
+	_cprintf("%d\n", m_iClient);
 
 	return true;
 }
@@ -91,25 +94,27 @@ void CNetwork::Input()
 	if (m_iGameState == GAME_PLAY)
 	{
 		send(m_Sock, (char*)&m_tKeyData, sizeof(Key_DATA), 0);
-		_cprintf("send KeyData \n");
+		_cprintf("send KeyData : %d\n", m_tKeyData.key);
 	}
 }
 
 void CNetwork::Update()
 {
-	recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
-	_cprintf("recv GameState %d\n", m_iGameState);
-	
+	if (m_iGameState != GAME_PLAY)
+	{
+		recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
+		_cprintf("recv GameState %d\n", m_iGameState);
+
+		if (m_iGameState == GAME_PLAY)
+			return;							// game_play상태로 바뀌면 input->update로 순서 맞춰주기위해
+	}
+
 	if (m_iGameState == GAME_PLAY)
 	{
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
+	
 		_cprintf("recv Data \n");
 	}
-
-	//if (m_iGameState == GAME_PLAY)
-	//{
-	//	recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
-	//}
 }
 
 void CNetwork::Render(HDC hdc)

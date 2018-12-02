@@ -175,13 +175,6 @@ void Logic(int client_id, SOCKET sock)
 	Update(client_id, sock, fTime);
 }
 
-void Init()
-{
-	InitializeCriticalSection(&cs);
-	
-	DataInit();
-}
-
 void Delete()
 {
 	delete g_Timer[0];

@@ -138,13 +138,10 @@ void CGameFramework::Logic()
 	m_pTimer->Update();
 
 	float fTime = m_pTimer->GetDeltaTime();
-
-	//if (m_pTimer->GetLimit())
-	{
-		Input(fTime);
-		Update(fTime);
-		Render(fTime);
-	}
+		
+	Input(fTime);
+	Update(fTime);
+	Render(fTime);
 }
 
 void CGameFramework::Input(float fTime)
@@ -152,14 +149,12 @@ void CGameFramework::Input(float fTime)
 	m_pInput->Update(fTime);
 	m_pSceneManager->Input(fTime);
 
-	if (m_pTimer->GetLimit())
-		GET_NETWORKINST->Input();
+	GET_NETWORKINST->Input();
 }
 
 int CGameFramework::Update(float fTime)
 {
-	if (m_pTimer->GetLimit())
-		GET_NETWORKINST->Update();
+	GET_NETWORKINST->Update();
 
 	return m_pSceneManager->Update(fTime);
 }

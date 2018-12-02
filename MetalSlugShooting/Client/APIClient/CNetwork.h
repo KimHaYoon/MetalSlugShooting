@@ -43,6 +43,7 @@ private:
 	DATA				m_tData;
 	Key_DATA			m_tKeyData;
 	int					m_iGameState;
+	bool				m_bRecv;
 
 	string				m_ServerIP;
 

@@ -25,8 +25,8 @@
 #define PLAYERMAX		2
 #define MAXCOUNT		50
 
-#define PLAYER_SPEED	3.f
-#define BULLET_SPEED	3.f
+#define PLAYER_SPEED	15.f
+#define BULLET_SPEED	30.f
 #define BULLET_DAMAGE	10.f
 
 struct PlayerInfo
