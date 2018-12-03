@@ -27,4 +27,5 @@ public:
 	// test
 	virtual bool GetbDrop();
 	virtual void SetbDrop(bool drop);
+	virtual void SetbGo(bool go);
 };

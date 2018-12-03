@@ -1,3 +1,4 @@
-﻿  CNetwork.cpp
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\client\apiclient\cnetwork.cpp(116): error C2065: 'heli_is_move': 선언되지 않은 식별자입니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\client\apiclient\cnetwork.cpp(117): error C2065: 'heli_is_move': 선언되지 않은 식별자입니다.
+﻿  CInGame.cpp
+  CNetwork.cpp
+  코드를 생성하고 있습니다...
+  APIClient.vcxproj -> C:\Users\Home\Documents\GitHub\MetalSlugShooting\MetalSlugShooting\Client\Debug\APIClient.exe

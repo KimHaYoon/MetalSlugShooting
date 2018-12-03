@@ -8,9 +8,9 @@
 
 bool CGameFramework::m_bLoop = true;
 
-//#define SERVERON
+#define SERVERON
 
-CGameFramework::CGameFramework() : 
+CGameFramework::CGameFramework() :
 	m_pBackBuffer(NULL),
 	m_pTimer(NULL),
 	m_pSceneManager(NULL),
@@ -19,9 +19,9 @@ CGameFramework::CGameFramework() :
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(215);
 
-//#ifdef _DEBUG
+	//#ifdef _DEBUG
 	AllocConsole();
-//#endif
+	//#endif
 }
 
 CGameFramework::~CGameFramework()
@@ -58,9 +58,9 @@ CGameFramework::~CGameFramework()
 
 	DESTROY_NETWORK
 
-//#ifdef _DEBUG
+		//#ifdef _DEBUG
 		FreeConsole();
-//#endif // _DEBUG
+	//#endif // _DEBUG
 }
 
 bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * pClass, int iIconID, UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer)
@@ -96,7 +96,7 @@ bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * p
 	{
 		return false;
 	}
-	
+
 	// SceneManager 초기화
 	m_pSceneManager = new CSceneManager;
 	if (!m_pSceneManager->Init(m_hInst, m_hDC, m_pInput))
@@ -138,7 +138,7 @@ void CGameFramework::Logic()
 	m_pTimer->Update();
 
 	float fTime = m_pTimer->GetDeltaTime();
-		
+
 	Input(fTime);
 	Update(fTime);
 	Render(fTime);
@@ -155,19 +155,25 @@ void CGameFramework::Input(float fTime)
 int CGameFramework::Update(float fTime)
 {
 	GET_NETWORKINST->Update();
+#ifdef SERVERON
+
+#else
+	GET_NETWORKINST->SetGameState(GAME_PLAY);
+#endif // SERVERON
+
 
 	return m_pSceneManager->Update(fTime);
 }
 
 void CGameFramework::Render(float fTime)
-{	
+{
 	// 장면 안에있는 모든 오브젝트를 백버퍼에 그린다
 	m_pSceneManager->Render(m_pBackBuffer->GetMemDC(), fTime);
 
 	GET_NETWORKINST->Render(m_pBackBuffer->GetMemDC());
 
 	// 마지막으로 백버퍼를 화면에 그린다.
-	BitBlt(m_hDC, 0, 0, m_iWidth, m_iHeight, m_pBackBuffer->GetMemDC(),	0, 0, SRCCOPY);
+	BitBlt(m_hDC, 0, 0, m_iWidth, m_iHeight, m_pBackBuffer->GetMemDC(), 0, 0, SRCCOPY);
 }
 
 ATOM CGameFramework::WindowRegisterClass(const TCHAR * pClass, int iIconID)

@@ -1,6 +1,6 @@
 #pragma once
 #include "CSceneScript.h"
-class CInGame : 
+class CInGame :
 	public CSceneScript
 {
 private:
@@ -15,9 +15,15 @@ private:
 	class CPlayer*		m_pPlayer[2];
 	class CHPBar*		m_pHPBar[2];
 	class CHPGauge*		m_pHPGauge[2];
+	class CTimerUI*		m_pTimerUI[2];
+	class CWinOrLose*	m_pWinOrLoseUI;
+
+	// test
 	class CHeli*		m_pHeli;
 	class CHealing*		m_pHealing;
-	 
+
+	int ten, one;
+
 public:
 	virtual bool Init();
 	virtual void Input(float fTime);

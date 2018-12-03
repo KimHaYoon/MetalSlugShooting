@@ -4,10 +4,13 @@
 
 CNetwork* CNetwork::m_pInst = NULL;
 
-CNetwork::CNetwork() : 
+CNetwork::CNetwork() :
 	m_iGameState(GAME_READY),
 	m_bRecv(false)
 {
+	m_iTimeLimit = 0;
+	item_drop = 0;
+	heli_get = false;
 }
 
 
@@ -33,6 +36,11 @@ void CNetwork::SetKeyData(int key)
 	m_tKeyData.key = key;
 }
 
+void CNetwork::SetGameState(int iState)
+{
+	m_iGameState = iState;
+}
+
 int CNetwork::GetClientNum() const
 {
 	return m_iClient;
@@ -47,6 +55,29 @@ int CNetwork::GetGameState() const
 {
 	return m_iGameState;
 }
+
+int CNetwork::GetTimeLimit() const
+{
+	return m_iTimeLimit;
+}
+
+bool CNetwork::GetWin() const
+{
+	return m_bWin[m_iClient - 1];
+}
+
+
+// test
+bool CNetwork::GetHeliget() const
+{
+	return heli_get;
+}
+
+void CNetwork::SetHeliget(bool heli)
+{
+	heli_get = heli;
+}
+
 
 bool CNetwork::Init()
 {
@@ -75,7 +106,7 @@ bool CNetwork::Init()
 	serveraddr.sin_addr.s_addr = inet_addr(m_ServerIP.c_str());
 	serveraddr.sin_port = htons(SERVERPORT);
 	retval = connect(m_Sock, (SOCKADDR *)&serveraddr, sizeof(serveraddr));
-	
+
 	if (retval == SOCKET_ERROR)
 	{
 		return false;
@@ -111,19 +142,36 @@ void CNetwork::Update()
 
 	if (m_iGameState == GAME_PLAY)
 	{
-		recv(m_Sock, (char*)&ftime, sizeof(DATA), 0);
+
+		recv(m_Sock, (char*)&m_iTimeLimit, sizeof(int), 0);
+		_cprintf("recv Time : %d\n", m_iTimeLimit);
+
+		// test
+		if (m_iTimeLimit <= 87.f && item_drop == 0)
+		{
+			item_drop++;
+			heli_get = true;
+		}
+
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
 
-		if (heli_is_move == false)
-			recv(m_Sock, (char*)&heli_is_move, sizeof(bool), 0);
-	
 		_cprintf("recv Data \n");
+		if (m_iTimeLimit == 0)
+		{
+			recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
+		}
+	}
+
+	if (m_iGameState == GAME_END)
+	{
+		recv(m_Sock, (char*)m_bWin, sizeof(m_bWin), 0);
 	}
 }
 
 void CNetwork::Render(HDC hdc)
 {
 	TCHAR str[128] = {};
+	TCHAR time[128] = {};
 	if (m_iGameState == GAME_READY)
 	{
 		wsprintf(str, L"GameState : Game 대기중");
@@ -136,6 +184,7 @@ void CNetwork::Render(HDC hdc)
 
 	else if (m_iGameState == GAME_PLAY)
 	{
+		wsprintf(time, L"TIME : %d", m_iTimeLimit);
 		wsprintf(str, L"GameState : Game 플레이상태");
 	}
 
@@ -144,6 +193,7 @@ void CNetwork::Render(HDC hdc)
 		wsprintf(str, L"GameState : Game 종료상태");
 	}
 	TextOut(hdc, 400, 100, str, lstrlen(str));
+	TextOut(hdc, 400, 200, time, lstrlen(time));
 }
 
 void CNetwork::LoadServerIPAddress()

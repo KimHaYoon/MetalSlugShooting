@@ -166,7 +166,7 @@ void CGameObject::Render(HDC hDC, float fTime)
 				iImageY = m_pAnimation->GetAnimationInfo().iFrameY * iHeight;
 			}
 
-			BitBlt(hDC, x, y, iWidth, iHeight,	m_pTexture->GetMemDC(), iImageX, iImageY, SRCCOPY);
+			BitBlt(hDC, x, y, iWidth, iHeight, m_pTexture->GetMemDC(), iImageX, iImageY, SRCCOPY);
 		}
 
 		else
@@ -219,7 +219,7 @@ void CGameObject::SetTexture(const string & strKey, HINSTANCE hInst, HDC hDC, co
 		}
 	}
 
-	if(m_pAnimation)
+	if (m_pAnimation)
 	{
 		m_pAnimation->SetTextureSize(m_pTexture->GetWidth(), m_pTexture->GetHeight());
 		SetSize(m_pAnimation->GetFrameWidth(), m_pAnimation->GetFrameHeight());

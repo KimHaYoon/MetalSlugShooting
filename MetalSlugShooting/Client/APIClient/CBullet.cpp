@@ -42,11 +42,11 @@ void CBullet::Update(float fTime)
 	/*m_fPos.x += m_fSpeed * m_iDir * fTime;
 
 	if (m_fPos.x + (1.f - m_fPivot.x) * m_fSize.x < 0 ||
-		m_fPos.x - m_fPivot.x * m_fSize.x > WIN_WIDTH ||
-		m_fPos.y + (1.f - m_fPivot.y) * m_fSize.y < 0 ||
-		m_fPos.y - m_fPivot.y * m_fSize.y > WIN_HEIGHT)
+	m_fPos.x - m_fPivot.x * m_fSize.x > WIN_WIDTH ||
+	m_fPos.y + (1.f - m_fPivot.y) * m_fSize.y < 0 ||
+	m_fPos.y - m_fPivot.y * m_fSize.y > WIN_HEIGHT)
 	{
-		Die();
+	Die();
 	}*/
 
 }

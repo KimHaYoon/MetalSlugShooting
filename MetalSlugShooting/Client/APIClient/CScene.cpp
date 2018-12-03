@@ -2,7 +2,7 @@
 #include "CScene.h"
 #include "CGameObject.h"
 
-CScene::CScene() : 
+CScene::CScene() :
 	m_pSceneScript(NULL),
 	m_pInput(NULL)
 {

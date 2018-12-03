@@ -14,7 +14,7 @@ private:
 	PlayerInfo	m_tInfo;
 
 	float		m_fSpeed;
-	
+
 	bool		m_bChange;		// ÅºÃ¢ ±³È¯
 	float		m_fChangeTime;
 

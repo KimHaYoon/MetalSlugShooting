@@ -79,6 +79,12 @@
     <Filter Include="00. Network">
       <UniqueIdentifier>{7ad0311d-b38d-4656-a29a-4d29e0af5606}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. 오브젝트\05. UI\02. 타이머">
+      <UniqueIdentifier>{e8735100-4c4e-477a-b016-62924ba1c102}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\05. UI\03. 승패">
+      <UniqueIdentifier>{0e1b2525-981b-4c02-8ae9-9532671faabd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -162,6 +168,12 @@
     <ClInclude Include="CHeli.h">
       <Filter>03. 오브젝트\04. 아이템</Filter>
     </ClInclude>
+    <ClInclude Include="CTimerUI.h">
+      <Filter>03. 오브젝트\05. UI\02. 타이머</Filter>
+    </ClInclude>
+    <ClInclude Include="CWinOrLose.h">
+      <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -232,6 +244,12 @@
     </ClCompile>
     <ClCompile Include="CHeli.cpp">
       <Filter>03. 오브젝트\04. 아이템</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimerUI.cpp">
+      <Filter>03. 오브젝트\05. UI\02. 타이머</Filter>
+    </ClCompile>
+    <ClCompile Include="CWinOrLose.cpp">
+      <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

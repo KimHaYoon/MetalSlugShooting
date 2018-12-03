@@ -44,7 +44,7 @@ void CBoom::Update(float fTime)
 	else
 		MoveCurved(fTime);	// 베지어 곡선 이동
 
-	// 여기서 충돌체크해서 충돌하면 터트리든 뭘하든~솰라솰라
+							// 여기서 충돌체크해서 충돌하면 터트리든 뭘하든~솰라솰라
 
 	if (m_fPos.y >= m_fTargetPos.y)
 	{
@@ -70,7 +70,7 @@ void CBoom::CalcPos()
 	if (!IsVaildTarget())
 		return;	// 타겟 정보 유효하지 않음
 
-	// 초기 위치 셋팅
+				// 초기 위치 셋팅
 	m_fOrgPos.x = m_fPos.x;
 	m_fOrgPos.y = m_fPos.y;
 

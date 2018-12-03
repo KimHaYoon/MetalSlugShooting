@@ -22,25 +22,25 @@ private:
 	PKEYINFO	m_pCreate;
 	HWND		m_hWnd;
 
-//private:
-//	CMouse*		m_pMouse;
-//
-//public:
-//	CMouse* GetMouse()	const
-//	{
-//		return m_pMouse;
-//	}
-//
-//	POINT GetMousePos()	const
-//	{
-//		return m_pMouse->GetMousePos();
-//	}
-//
-//	POINT GetMouseMove()	const
-//	{
-//		return m_pMouse->GetMouseMove();
-//	}
-//
+	//private:
+	//	CMouse*		m_pMouse;
+	//
+	//public:
+	//	CMouse* GetMouse()	const
+	//	{
+	//		return m_pMouse;
+	//	}
+	//
+	//	POINT GetMousePos()	const
+	//	{
+	//		return m_pMouse->GetMousePos();
+	//	}
+	//
+	//	POINT GetMouseMove()	const
+	//	{
+	//		return m_pMouse->GetMouseMove();
+	//	}
+	//
 public:
 	bool Init(HWND hWnd);
 

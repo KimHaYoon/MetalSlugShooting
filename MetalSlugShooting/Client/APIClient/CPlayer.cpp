@@ -69,18 +69,18 @@ void CPlayer::CreateBoom()
 {
 	/*
 	if (m_tInfo.boomcnt < 1)
-		return;
+	return;
 
 	CBoom* pBoom = new CBoom("Boom");
 
 	if (!pBoom->Init(m_fPos, m_tInfo.dir))
 	{
-		if (pBoom)
-		{
-			delete pBoom;
+	if (pBoom)
+	{
+	delete pBoom;
 
-			pBoom = NULL;
-		}
+	pBoom = NULL;
+	}
 	}
 
 	m_pScene->AddObject(pBoom);
@@ -111,7 +111,7 @@ bool CPlayer::Init()
 
 
 	m_pAnimation->ChangeAnimation(0);
-	
+
 	return true;
 }
 
@@ -144,7 +144,7 @@ void CPlayer::Input(float fTime)
 		if (m_iIdle == 0)
 			return;
 
-		GET_NETWORKINST->SetKeyData(DOWN_KEY); 
+		GET_NETWORKINST->SetKeyData(DOWN_KEY);
 	}
 
 	else if (m_pInput->KeyDown("Shoot"))
@@ -199,12 +199,12 @@ void CPlayer::Update(float fTime)
 		{
 			m_pBullet[i].Init();
 			m_pBullet[i].SetTexture("Bullet", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Bullet.bmp", true, RGB(0, 248, 0));
-		}		
+		}
 
 		/*for (int i = 0; i < 3; ++i)
 		{
-			m_pBoom[i].Init();	
-			m_pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
+		m_pBoom[i].Init();
+		m_pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
 
 		}*/
 
@@ -231,10 +231,10 @@ void CPlayer::Update(float fTime)
 
 	/*for (int i = 0; i < 3; ++i)
 	{
-		m_pBoom[i].Update(fTime);
+	m_pBoom[i].Update(fTime);
 	}*/
 
-	if (m_pAnimation->GetCurrentAnimation() == 2 || m_pAnimation->GetCurrentAnimation() == 3 || 
+	if (m_pAnimation->GetCurrentAnimation() == 2 || m_pAnimation->GetCurrentAnimation() == 3 ||
 		m_pAnimation->GetCurrentAnimation() == 10 || m_pAnimation->GetCurrentAnimation() == 11)
 	{
 		m_iIdle = 0;
@@ -263,7 +263,7 @@ void CPlayer::Render(HDC hDC, float fTime)
 
 	/*for (int i = 0; i < 3; ++i)
 	{
-		m_pBoom[i].Render(hDC, fTime);
+	m_pBoom[i].Render(hDC, fTime);
 	}*/
 
 	TCHAR str[128];

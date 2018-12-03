@@ -31,6 +31,7 @@ bool g_bPlayerTimer[PLAYERMAX] = {};
 //---heli test---
 int item_drop = 0;
 bool heli_is_move = false;
+
 //=====================================================================
 
 // 클라이언트와 데이터 통신 스레드함수
@@ -101,7 +102,7 @@ int main(int argc, char *argv[])
 		// accept()
 		addrlen = sizeof(clientaddr);
 		client_sock = accept(listen_sock, (SOCKADDR *)&clientaddr, &addrlen);
-		if (client_sock == INVALID_SOCKET) 
+		if (client_sock == INVALID_SOCKET)
 		{
 			cout << "accept 에러" << endl;
 			break;
@@ -110,11 +111,11 @@ int main(int argc, char *argv[])
 
 		// 접속한 클라이언트 정보 출력
 		printf("\n[TCP 서버] 클라이언트 접속: IP 주소=%s, 포트 번호=%d\n", inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
-		
+
 		g_tData.num = g_iConnectNum + 1;
 		send(client_sock, (char*)&g_tData, sizeof(DATA), 0);			// 초기 데이터 전송
 
-		// 스레드 생성
+																		// 스레드 생성
 		hThread = CreateThread(NULL, 0, ProcessClient, (LPVOID)client_sock, 0, NULL);
 
 		// closesocket() - client socket
@@ -205,7 +206,7 @@ void Input(int id, SOCKET sock, float fTime)
 	}
 
 	recvn(sock, (char*)&g_tKeyData, sizeof(Key_DATA), 0);		// 키값 받기
-	//EnterCriticalSection(&cs);
+																//EnterCriticalSection(&cs);
 	cout << id + 1 << "P : recvKeyData " << g_tKeyData.key << endl;
 	//LeaveCriticalSection(&cs);
 
@@ -256,7 +257,7 @@ void Input(int id, SOCKET sock, float fTime)
 
 		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
 		g_tData.player[id].bulletcnt -= 1;	// id의 보유한 총알 감소
-	
+
 		if (g_tData.player[id].dir == -1)
 		{
 			g_tData.player[id].state = 2;
@@ -266,57 +267,57 @@ void Input(int id, SOCKET sock, float fTime)
 		{
 			g_tData.player[id].state = 3;
 		}
-		
-		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+
+		//g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
 		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
 		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
 		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
 		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
-		
-		//cout << "CreateBullet" << endl;
+
+																				//cout << "CreateBullet" << endl;
 	}
 
 	/*if (g_tKeyData.key == Q_KEY)
 	{
-		if (g_tData.player[id].boomcnt< 1)
-			return;
+	if (g_tData.player[id].boomcnt< 1)
+	return;
 	}*/
 
 	/*if (g_tKeyData.key == SHOOT_LEFT_KEY)
 	{
-		if (g_tData.player[id].bulletcnt < 1)
-			return;
+	if (g_tData.player[id].bulletcnt < 1)
+	return;
 
-		g_tData.player[id].dir = -1;
-		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+	g_tData.player[id].dir = -1;
+	g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
 
-		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
-		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
-		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
-		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
-		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
-		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
-		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
+	g_iBulletCount[id] += 1;												// id의 총알 카운트 증가
+	g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+	g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+	g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
+	g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
+	g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
+	g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
 
-		cout << "CreateBullet" << endl; 		
+	cout << "CreateBullet" << endl;
 	}
 
 	if (g_tKeyData.key == SHOOT_RIGHT_KEY)
 	{
-		if (g_tData.player[id].bulletcnt < 1)
-			return;
-		g_tData.player[id].dir = 1;
-		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+	if (g_tData.player[id].bulletcnt < 1)
+	return;
+	g_tData.player[id].dir = 1;
+	g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
 
-		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
-		g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
-		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
-		g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
-		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
-		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
-		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
+	g_iBulletCount[id] += 1;												// id의 총알 카운트 증가
+	g_tData.player[id].bulletcnt -= 1;										// id의 보유한 총알 감소
+	g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
+	g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x;		// id의 x
+	g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
+	g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
+	g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
 
-		cout << "CreateBullet" << endl;
+	cout << "CreateBullet" << endl;
 	}
 	*/
 }
@@ -325,7 +326,7 @@ void Update(int id, SOCKET sock, float fTime)
 {
 	send(sock, (char*)&g_iGameState/*[id]*/, sizeof(int), 0);
 	//EnterCriticalSection(&cs);
-	cout << id + 1<< "P : SendGameState -> " << g_iGameState/*[id]*/ << endl;
+	cout << id + 1 << "P : SendGameState -> " << g_iGameState/*[id]*/ << endl;
 	//LeaveCriticalSection(&cs);
 
 	if (g_iGameState/*[id]*/ == GAME_READY)
@@ -354,26 +355,11 @@ void Update(int id, SOCKET sock, float fTime)
 	{
 		g_fTimeLimit[id] -= fTime;
 
-		if (g_fTime[id] > 5.f && item_drop == 0)	// 내 생각에는 30초마다 아이템이 생성되니까 다른 타임 세는 값을 주고
-												// 초기화를 20으로 시킨 뒤, 30될 때마다 동작하게 & 다시 0으로 값준 뒤 30되면 동작하게 하도록..?
-												// 하는 방향도 생각을 해볼 것.
-												// 현재의 시도는 단순히 헬기를 호출하고 특정 시간에 동작하도록만 함.
-												// 따로 헬기타음을 위한 패킷도 필요할 듯 함.
-		{
-			item_drop++;
-			heli_is_move = true;
-			send(sock, (char*)&heli_is_move, sizeof(heli_is_move), 0);	// 한 번만 그리라고 신호 주면 됨.
-		}																// 도착했는지 양쪽에서 확인 받으면 --> recv
-																		// is_move를 false 시키고 아이템 drop = true 시킨다
-																		// 한 쪽만 확인 받으면 멈춘채 대기
-																		// -------------------------------
-																		// 헬기 위치를 계속 서버에서 뿌려주기?
-
 		BulletUpdate(id);
 
 		send(sock, (char*)&g_tData, sizeof(DATA), 0);
 		//EnterCriticalSection(&cs);
-		cout << id + 1<< "P에게 데이터 보냄" << endl;
+		cout << id + 1 << "P에게 데이터 보냄" << endl;
 		//cout << id + 1<< "상태 : " << g_tData.player[id].state << endl;
 		//LeaveCriticalSection(&cs);
 	}
@@ -413,22 +399,22 @@ void DataInit()
 			g_tData.bullet[i][j].x = -200;
 			g_tData.bullet[i][j].y = -200;
 			g_tData.bullet[i][j].dir = 0;
-			g_tData.bullet[i][j].num = i;
+			//g_tData.bullet[i][j].num = i;
 			g_tData.bullet[i][j].shoot = false;
 		}
 
 		/*for (int j = 0; j < 3; ++j)
 		{
-			g_tData.boom[i][j].x = -300;
-			g_tData.boom[i][j].y = -300;
-			g_tData.boom[i][j].dir = 0;
-			g_tData.boom[i][j].num = i;
-			g_tData.boom[i][j].shoot = false;
+		g_tData.boom[i][j].x = -300;
+		g_tData.boom[i][j].y = -300;
+		g_tData.boom[i][j].dir = 0;
+		g_tData.boom[i][j].num = i;
+		g_tData.boom[i][j].shoot = false;
 		}*/
 
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
-		g_iGameState/*[i] */= GAME_READY;
+		g_iGameState/*[i] */ = GAME_READY;
 	}
 }
 

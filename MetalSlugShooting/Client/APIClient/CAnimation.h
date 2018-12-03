@@ -86,7 +86,7 @@ public:
 	}
 
 public:
-	CAnimation* Create(const char* pName, ANIMATION_TYPE eType,
+	CAnimation * Create(const char* pName, ANIMATION_TYPE eType,
 		ANIMATION_OPTION eOption, UINT iWidth, UINT iHeight,
 		UINT iFrameMaxX, UINT iFrameMaxY, float fLimitTime);
 

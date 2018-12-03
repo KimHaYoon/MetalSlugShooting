@@ -36,7 +36,7 @@ bool CHeli::Init()
 	m_fPos.x = 0;
 	m_fPos.y = 100.f;
 	m_fSpeed = 150.f;
-	m_bGo = true;
+	m_bGo = false;
 	return true;
 }
 
@@ -81,4 +81,9 @@ bool CHeli::GetbDrop()
 void CHeli::SetbDrop(bool drop)
 {
 	m_bDrop = drop;
+}
+
+void CHeli::SetbGo(bool go)
+{
+	m_bGo = go;
 }
