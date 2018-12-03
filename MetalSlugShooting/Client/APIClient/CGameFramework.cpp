@@ -8,7 +8,7 @@
 
 bool CGameFramework::m_bLoop = true;
 
-#define SERVERON
+//#define SERVERON
 
 CGameFramework::CGameFramework() : 
 	m_pBackBuffer(NULL),

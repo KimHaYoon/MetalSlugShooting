@@ -155,6 +155,7 @@
     <ClInclude Include="CGameFramework.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CHealing.h" />
+    <ClInclude Include="CHeli.h" />
     <ClInclude Include="CHPBar.h" />
     <ClInclude Include="CHPGauge.h" />
     <ClInclude Include="CInGame.h" />
@@ -183,6 +184,7 @@
     <ClCompile Include="CGameFramework.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CHealing.cpp" />
+    <ClCompile Include="CHeli.cpp" />
     <ClCompile Include="CHPBar.cpp" />
     <ClCompile Include="CHPGauge.cpp" />
     <ClCompile Include="CInGame.cpp" />

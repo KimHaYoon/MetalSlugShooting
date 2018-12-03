@@ -1,8 +1,11 @@
 #pragma once
-#include "CGameObject.h"
+#include "CItem.h"
 
-class CHealing : public CGameObject
+class CHealing : public CItem
 {
+private:
+	int m_iHealAmount;
+
 public:
 	CHealing();
 	CHealing(const string& strTag);

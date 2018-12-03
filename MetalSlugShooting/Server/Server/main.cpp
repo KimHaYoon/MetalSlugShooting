@@ -27,6 +27,10 @@ char buf[BUFSIZE] = {};
 int g_iBulletCount[PLAYERMAX] = {};
 int g_iBoomCount[3] = {};
 bool g_bPlayerTimer[PLAYERMAX] = {};
+
+//---heli test---
+int item_drop = 0;
+bool heli_is_move = false;
 //=====================================================================
 
 // 클라이언트와 데이터 통신 스레드함수
@@ -349,6 +353,21 @@ void Update(int id, SOCKET sock, float fTime)
 	if (g_iGameState/*[id]*/ == GAME_PLAY)
 	{
 		g_fTimeLimit[id] -= fTime;
+
+		if (g_fTime[id] > 5.f && item_drop == 0)	// 내 생각에는 30초마다 아이템이 생성되니까 다른 타임 세는 값을 주고
+												// 초기화를 20으로 시킨 뒤, 30될 때마다 동작하게 & 다시 0으로 값준 뒤 30되면 동작하게 하도록..?
+												// 하는 방향도 생각을 해볼 것.
+												// 현재의 시도는 단순히 헬기를 호출하고 특정 시간에 동작하도록만 함.
+												// 따로 헬기타음을 위한 패킷도 필요할 듯 함.
+		{
+			item_drop++;
+			heli_is_move = true;
+			send(sock, (char*)&heli_is_move, sizeof(heli_is_move), 0);	// 한 번만 그리라고 신호 주면 됨.
+		}																// 도착했는지 양쪽에서 확인 받으면 --> recv
+																		// is_move를 false 시키고 아이템 drop = true 시킨다
+																		// 한 쪽만 확인 받으면 멈춘채 대기
+																		// -------------------------------
+																		// 헬기 위치를 계속 서버에서 뿌려주기?
 
 		BulletUpdate(id);
 

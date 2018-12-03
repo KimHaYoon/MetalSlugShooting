@@ -111,7 +111,11 @@ void CNetwork::Update()
 
 	if (m_iGameState == GAME_PLAY)
 	{
+		recv(m_Sock, (char*)&ftime, sizeof(DATA), 0);
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
+
+		if (heli_is_move == false)
+			recv(m_Sock, (char*)&heli_is_move, sizeof(bool), 0);
 	
 		_cprintf("recv Data \n");
 	}

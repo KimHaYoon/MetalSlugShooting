@@ -159,6 +159,9 @@
     <ClInclude Include="CNetwork.h">
       <Filter>00. Network</Filter>
     </ClInclude>
+    <ClInclude Include="CHeli.h">
+      <Filter>03. 오브젝트\04. 아이템</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -226,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="CNetwork.cpp">
       <Filter>00. Network</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeli.cpp">
+      <Filter>03. 오브젝트\04. 아이템</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

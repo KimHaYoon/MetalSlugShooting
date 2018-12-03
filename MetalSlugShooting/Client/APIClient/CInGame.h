@@ -15,6 +15,8 @@ private:
 	class CPlayer*		m_pPlayer[2];
 	class CHPBar*		m_pHPBar[2];
 	class CHPGauge*		m_pHPGauge[2];
+	class CHeli*		m_pHeli;
+	class CHealing*		m_pHealing;
 	 
 public:
 	virtual bool Init();

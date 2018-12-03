@@ -9,6 +9,8 @@
 #include "CHPBar.h"
 #include "CHPGauge.h"
 #include "CNetwork.h"
+#include "CHeli.h"
+#include "CHealing.h"
 
 CInGame::CInGame() : 
 	m_pBackGround(NULL)
@@ -110,6 +112,29 @@ bool CInGame::Init()
 	m_pScene->AddObject(m_pHPGauge[1]);
 	//=============================================================================================================
 
+	
+
+
+	// test
+
+	// heli
+	m_pHeli = new CHeli("Heli");
+	if (!m_pHeli->Init())
+	{
+		return false;
+	}
+	m_pHeli->SetTexture("Heli", m_hInst, m_hDC, L"Texture/Heli.bmp", true, RGB(255.f, 255.f, 255.f));
+	m_pScene->AddObject(m_pHeli);
+
+	// heal
+	m_pHealing = new CHealing("Heal");
+	if (!m_pHealing->Init())
+	{
+		return false;
+	}
+	m_pHealing->SetTexture("Heal", m_hInst, m_hDC, L"Texture/heal.bmp", true, RGB(0.f, 248.f, 0.f));
+	m_pScene->AddObject(m_pHealing);
+
 	return true;
 }
 
@@ -126,6 +151,12 @@ void CInGame::Update(float fTime)
 		m_pPlayer[i]->SetPlayerInfo(tData.player[i]);
 		m_pHPGauge[i]->SetHP(m_pPlayer[i]->GetHP());
 		m_pPlayer[i]->SetBulletInfo(tData.bullet[i]);
+	}
+
+	if (m_pHeli->GetbDrop())
+	{
+		m_pHealing->SetDrop(true);
+		m_pHeli->SetbDrop(false);
 	}
 }
 

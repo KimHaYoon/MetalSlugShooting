@@ -14,7 +14,7 @@ protected:
 	bool		m_bDrop;
 
 protected:
-	virtual void SetInfo(int num, int x, int y);
+	virtual void SetInfo(ItemInfo info);
 	virtual void NotDrop();
 
 public:
@@ -22,4 +22,6 @@ public:
 	virtual void Input(float fTime);
 	virtual void Update(float fTime);
 	virtual void Render(HDC hDC, float fTime);
+
+	virtual void SetDrop(bool drop);
 };
