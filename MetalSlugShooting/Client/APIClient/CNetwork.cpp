@@ -129,18 +129,31 @@ void CNetwork::Update()
 	{
 		recv(m_Sock, (char*)&m_iTimeLimit, sizeof(int), 0);
 		_cprintf("recv Time : %d\n", m_iTimeLimit);
+
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
-	
 		_cprintf("recv Data \n");
-		if (m_iTimeLimit == 0)
-		{
-			recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
-		}
+
+
+		recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
+		_cprintf("recv GamePLAY\n");
 	}
 
 	if (m_iGameState == GAME_END)
 	{
-		recv(m_Sock, (char*)m_bWin, sizeof(m_bWin), 0);
+		recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
+		_cprintf("recv GameEnd\n");
+		if (!m_bRecv)
+		{
+			recv(m_Sock, (char*)&m_bWin, sizeof(m_bWin), 0);
+
+			if (m_bWin[m_iClient - 1])
+				_cprintf("recv %d win\n", m_iClient);
+
+			else
+				_cprintf("recv %d lose\n", m_iClient);
+
+			m_bRecv = true;
+		}
 	}
 }
 

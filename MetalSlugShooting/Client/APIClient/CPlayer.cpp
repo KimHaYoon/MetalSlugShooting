@@ -256,9 +256,12 @@ void CPlayer::Render(HDC hDC, float fTime)
 	CGameObject::Render(hDC, fTime);
 
 
-	for (int i = 0; i < MAXCOUNT; ++i)
+	if (GET_NETWORKINST->GetGameState() == GAME_PLAY)
 	{
-		m_pBullet[i].Render(hDC, fTime);
+		for (int i = 0; i < MAXCOUNT; ++i)
+		{
+			m_pBullet[i].Render(hDC, fTime);
+		}
 	}
 
 	/*for (int i = 0; i < 3; ++i)

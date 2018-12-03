@@ -8,7 +8,7 @@ int g_iGameState = GAME_READY;
 
 
 float	g_fTime = 0.f;						// 현재 시간
-float	g_fTimeLimit = 90.2f;				// 한계 시간
+float	g_fTimeLimit = 3.f;				// 한계 시간
 int		g_iConnectNum = 0;		
 
 CRITICAL_SECTION	cs;
@@ -150,7 +150,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 			if (g_iGameState == GAME_READY)
 			{
 				g_iGameState = GAME_OK;
-				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
+				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_READY");
 			}
 
 			if (g_iGameState == GAME_OK)
@@ -160,16 +160,11 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				{
 					g_iGameState = GAME_PLAY;
 				}
-				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
+				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
 			}
 
 			if (g_iGameState == GAME_PLAY)
 			{
-				if (g_fTimeLimit <= 0.f)
-				{
-					//g_iGameState = GAME_END;
-					//Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_END");
-				}
 				int iTimeLimit = (int)g_fTimeLimit;
 				Send((char*)&iTimeLimit, sizeof(int), "제한시간");
 				cout << iTimeLimit << endl;
@@ -177,14 +172,20 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				RecvKeyAndDataUpdate();
 				Update();
 				Send((char*)&g_tData, sizeof(DATA), "Data");
+				if (g_fTimeLimit <= 0.f)
+				{
+					IsWin();
+					g_iGameState = GAME_END;
+				}
+				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
 			}
 
 			if (g_iGameState == GAME_END)
 			{
-				IsWin();
+				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_END");
 				if (!g_bSend)
 				{
-					Send((char*)g_bWin, sizeof(g_bWin), "승패여부");
+					Send((char*)&g_bWin, sizeof(g_bWin), "승패여부");
 					g_bSend = true;
 				}
 			}
@@ -316,20 +317,24 @@ void DataUpdate(int id, Key_DATA keydata)
 
 void IsWin()
 {
-	if (g_fTimeLimit >= 0.0001f)
+	if (g_tData.player[0].hp > g_tData.player[1].hp)
 	{
-		if (g_tData.player[0].hp > g_tData.player[1].hp)
-		{
-			g_bWin[0] = true;
-			g_bWin[1] = false;
-		}
-
-		else
-		{
-			g_bWin[0] = true;
-			g_bWin[1] = false;
-		}
+		g_bWin[0] = true;
+		g_bWin[1] = false;
 	}
+
+	else if(g_tData.player[0].hp < g_tData.player[1].hp)
+	{
+		g_bWin[0] = false;
+		g_bWin[1] = true;
+	}
+
+	else
+	{
+		g_bWin[0] = true;
+		g_bWin[1] = true;
+	}
+
 }
 
 bool Collisition(RECT rc1, RECT rc2)
@@ -372,13 +377,6 @@ void Update()
 			if (g_tData.player[0].hp > 0)
 				g_tData.player[0].hp -= BULLET_DAMAGE;
 
-			else
-			{
-				//g_iGameState = GAME_END;
-				g_bWin[0] = false;
-				g_bWin[1] = true;
-			}
-
 			g_tData.bullet[1][j].shoot = false;
 		}
 
@@ -386,13 +384,6 @@ void Update()
 		{
 			if (g_tData.player[1].hp > 0)
 				g_tData.player[1].hp -= BULLET_DAMAGE;
-
-			else
-			{
-				//g_iGameState = GAME_END;
-				g_bWin[0] = true;
-				g_bWin[1] = false;
-			}
 
 			g_tData.bullet[0][j].shoot = false;
 		}
@@ -408,6 +399,12 @@ void Update()
 				g_tData.bullet[i][j].dir = 0;
 				g_tData.bullet[i][j].shoot = false;
 			}
+
+			if (g_tData.player[i].hp <= 0)
+			{
+				IsWin();
+				g_iGameState = GAME_END;
+			}
 		}
 	}
 }
@@ -416,10 +413,8 @@ void DataInit()
 {
 	cout << "Data 초기화" << endl;
 
-	g_iConnectNum = 0;
-
+	//g_iConnectNum = 0;
 	g_tData.num = 0;
-
 	g_tData.player[0].num = 1;
 	g_tData.player[0].x = 300;
 	g_tData.player[0].y = 500;
@@ -460,8 +455,6 @@ void DataInit()
 
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
-		g_iGameState = GAME_READY;
-		//PlayerColl[i] = { g_tData.player[i].x + 20, g_tData.player[i].y, g_tData.player[i].x + 80, g_tData.player[i].y + 100 };
 	}
 }
 
