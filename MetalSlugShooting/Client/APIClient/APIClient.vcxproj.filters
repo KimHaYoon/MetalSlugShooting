@@ -55,9 +55,6 @@
     <Filter Include="03. 오브젝트\02. 캐릭터">
       <UniqueIdentifier>{da700e56-cfce-4513-9a77-bd1a998c08c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. 오브젝트\03. 총알">
-      <UniqueIdentifier>{06747a26-d062-43fc-90c6-261c57818b47}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. 오브젝트\04. 아이템">
       <UniqueIdentifier>{ee11a2b4-8d0b-42ce-86b1-dd333722757a}</UniqueIdentifier>
     </Filter>
@@ -84,6 +81,9 @@
     </Filter>
     <Filter Include="03. 오브젝트\05. UI\03. 승패">
       <UniqueIdentifier>{fc740724-9c4b-4a16-af02-0f7bae20ddc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\03. 총알, 수류탄">
+      <UniqueIdentifier>{06747a26-d062-43fc-90c6-261c57818b47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +142,7 @@
       <Filter>03. 오브젝트\02. 캐릭터</Filter>
     </ClInclude>
     <ClInclude Include="CBullet.h">
-      <Filter>03. 오브젝트\03. 총알</Filter>
+      <Filter>03. 오브젝트\03. 총알, 수류탄</Filter>
     </ClInclude>
     <ClInclude Include="CItem.h">
       <Filter>03. 오브젝트\04. 아이템</Filter>
@@ -170,6 +170,9 @@
     </ClInclude>
     <ClInclude Include="CWinOrLose.h">
       <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
+    </ClInclude>
+    <ClInclude Include="CBoomBullet.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,7 +219,7 @@
       <Filter>03. 오브젝트\02. 캐릭터</Filter>
     </ClCompile>
     <ClCompile Include="CBullet.cpp">
-      <Filter>03. 오브젝트\03. 총알</Filter>
+      <Filter>03. 오브젝트\03. 총알, 수류탄</Filter>
     </ClCompile>
     <ClCompile Include="CItem.cpp">
       <Filter>03. 오브젝트\04. 아이템</Filter>
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="CWinOrLose.cpp">
       <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
+    </ClCompile>
+    <ClCompile Include="CBoomBullet.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

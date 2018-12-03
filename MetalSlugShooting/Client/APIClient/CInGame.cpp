@@ -164,6 +164,7 @@ void CInGame::Update(float fTime)
 		m_pPlayer[i]->SetPlayerInfo(tData.player[i]);
 		m_pHPGauge[i]->SetHP(m_pPlayer[i]->GetHP());
 		m_pPlayer[i]->SetBulletInfo(tData.bullet[i]);
+		m_pPlayer[i]->SetBoomInfo(tData.boom[i]);
 	}
 
 	if (GET_NETWORKINST->GetGameState() == GAME_PLAY)

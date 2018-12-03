@@ -151,6 +151,7 @@
     <ClInclude Include="CAnimation.h" />
     <ClInclude Include="CBackground.h" />
     <ClInclude Include="CBoom.h" />
+    <ClInclude Include="CBoomBullet.h" />
     <ClInclude Include="CBullet.h" />
     <ClInclude Include="CGameFramework.h" />
     <ClInclude Include="CGameObject.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="CAnimation.cpp" />
     <ClCompile Include="CBackground.cpp" />
     <ClCompile Include="CBoom.cpp" />
+    <ClCompile Include="CBoomBullet.cpp" />
     <ClCompile Include="CBullet.cpp" />
     <ClCompile Include="CGameFramework.cpp" />
     <ClCompile Include="CGameObject.cpp" />

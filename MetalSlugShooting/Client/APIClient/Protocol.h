@@ -24,6 +24,7 @@
 
 #define PLAYERMAX		2	
 #define MAXCOUNT		50
+#define BOOMCOUNT		10
 
 struct PlayerInfo
 {
@@ -48,9 +49,8 @@ struct BulletInfo
 
 struct BoomInfo
 {
-	int x;
-	int y;
-	int dir;
+	float x;
+	float y;
 	bool shoot;
 };
 
@@ -66,7 +66,7 @@ struct DATA
 	int  num;									// 1P, 2P
 	PlayerInfo	player[PLAYERMAX];				// 플레이어 정보
 	BulletInfo  bullet[PLAYERMAX][MAXCOUNT];	// 총알 정보
-	//BoomInfo	boom[PLAYERMAX][3];				// 수류탄 정보
+	BoomInfo	boom[PLAYERMAX][BOOMCOUNT];				// 수류탄 정보
 };
 
 struct Key_DATA

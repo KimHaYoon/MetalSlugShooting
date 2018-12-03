@@ -1,8 +1,11 @@
 ﻿  server.cpp
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(88): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(263): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(270): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(378): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(386): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(472): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(97): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(273): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(280): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(349): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(356): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(357): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(422): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(430): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\server\server\server.cpp(516): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Server.vcxproj -> C:\Users\Hayoon\Desktop\NGP\trunk\MetalSlugShooting\Server\Debug\Server.exe

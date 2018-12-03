@@ -8,7 +8,7 @@ int g_iGameState = GAME_READY;
 
 
 float	g_fTime = 0.f;						// 현재 시간
-float	g_fTimeLimit = 3.f;				// 한계 시간
+float	g_fTimeLimit = 90.f;				// 한계 시간
 int		g_iConnectNum = 0;		
 
 CRITICAL_SECTION	cs;
@@ -19,12 +19,20 @@ DATA		g_tData;
 Key_DATA	g_tKeyData;
 
 int g_iBulletCount[PLAYERMAX] = {};
-int g_iBoomCount[3] = {};
+int g_iBoomCount[PLAYERMAX] = {};
 bool g_bWin[PLAYERMAX] = {false, false};
 bool g_bSend = false;
 
+float g_fTargetPosX[PLAYERMAX][BOOMCOUNT], g_fTargetPosY[PLAYERMAX][BOOMCOUNT];
+float g_fOrgPosX[PLAYERMAX][BOOMCOUNT], g_fOrgPosY[PLAYERMAX][BOOMCOUNT];
+float g_fMidPosX[PLAYERMAX][BOOMCOUNT], g_fMidPosY[PLAYERMAX][BOOMCOUNT];
+float g_fMu[PLAYERMAX][BOOMCOUNT];
+float num1[PLAYERMAX][BOOMCOUNT], num2[PLAYERMAX][BOOMCOUNT], mu2[PLAYERMAX][BOOMCOUNT];
+
+
 RECT PlayerColl[PLAYERMAX] = {};
 RECT BulletColl[PLAYERMAX][MAXCOUNT];
+RECT BoomColl[PLAYERMAX][BOOMCOUNT];
 
 DWORD WINAPI ProcessGame(LPVOID arg);
 void Send(const char* buf, int len, string str = NULL);
@@ -35,6 +43,7 @@ void DataInit();
 void Update();
 void DataUpdate(int id, Key_DATA keydata);
 void BulletUpdate(int id);
+void BoomUpdate(int id);
 void IsWin();
 bool Collisition(RECT rc1, RECT rc2);
 
@@ -231,6 +240,7 @@ void RecvKeyAndDataUpdate()
 			recv(g_socket[i], (char*)&g_tKeyData, sizeof(g_tKeyData), 0);
 			DataUpdate(i, g_tKeyData);
 			BulletUpdate(i);
+			BoomUpdate(i);
 		}
 	}
 }
@@ -291,7 +301,6 @@ void DataUpdate(int id, Key_DATA keydata)
 
 		if (g_iBulletCount[id] >= MAXCOUNT)
 			g_iBulletCount[id] = 0;
-		g_iBulletCount[id] += 1;							// id의 총알 카운트 증가 
 
 		g_tData.player[id].bulletcnt -= 1;	// id의 보유한 총알 감소
 
@@ -311,7 +320,42 @@ void DataUpdate(int id, Key_DATA keydata)
 		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
 		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
 
+		g_iBulletCount[id] += 1;							// id의 총알 카운트 증가 
 		//cout << "CreateBullet" << endl;
+	}
+
+	if (keydata.key == Q_KEY)
+	{
+		if (g_tData.player[id].boomcnt< 1)
+			return;
+
+		if (g_iBoomCount[id] >= BOOMCOUNT)
+			g_iBoomCount[id] = 0;
+
+		g_tData.player[id].boomcnt -= 1;	// id의 보유한 수류탄 감소
+
+		if (g_tData.player[id].dir == -1)
+		{
+			g_tData.player[id].state = 10;
+		}
+
+		else
+		{
+			g_tData.player[id].state = 11;
+		}
+
+		g_fTargetPosX[id][g_iBoomCount[id]] = g_tData.player[id].x + BOOM_DIST * g_tData.player[id].dir;
+		g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;
+		g_fOrgPosX[id][g_iBoomCount[id]] = g_tData.player[id].x;
+		g_fOrgPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y;
+		g_fMidPosX[id][g_iBoomCount[id]] = (g_tData.player[id].x + g_fTargetPosY[id][g_iBoomCount[id]]) / 2;
+		g_fMidPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y - DEFAULT_MID_HEIGHT;
+		g_fMu[id][g_iBoomCount[id]] = 0.f;
+
+		g_tData.boom[id][g_iBoomCount[id]].shoot = true;					// 수류탄이 발사됨!
+		g_tData.boom[id][g_iBoomCount[id]].x = g_tData.player[id].x;
+		g_tData.boom[id][g_iBoomCount[id]].y = g_tData.player[id].y;
+		g_iBoomCount[id] += 1;
 	}
 }
 
@@ -417,16 +461,16 @@ void DataInit()
 	g_tData.num = 0;
 	g_tData.player[0].num = 1;
 	g_tData.player[0].x = 300;
-	g_tData.player[0].y = 500;
+	g_tData.player[0].y = PLAYER_POS_Y;
 	g_tData.player[0].magazinecnt = 2;
-	g_tData.player[0].boomcnt = 0;
+	g_tData.player[0].boomcnt = BOOMCOUNT;
 	g_tData.player[0].bulletcnt = 100;
 	g_tData.player[0].hp = 100;
 	g_tData.player[0].dir = 1;
 
 	g_tData.player[1].num = 2;
 	g_tData.player[1].x = 500;
-	g_tData.player[1].y = 500;
+	g_tData.player[1].y = PLAYER_POS_Y;
 	g_tData.player[1].magazinecnt = 2;
 	g_tData.player[1].boomcnt = 0;
 	g_tData.player[1].bulletcnt = 100;
@@ -444,14 +488,12 @@ void DataInit()
 			g_tData.bullet[i][j].shoot = false;
 		}
 
-		/*for (int j = 0; j < 3; ++j)
+		for (int j = 0; j < BOOMCOUNT; ++j)
 		{
 			g_tData.boom[i][j].x = -300;
 			g_tData.boom[i][j].y = -300;
-			g_tData.boom[i][j].dir = 0;
-			g_tData.boom[i][j].num = i;
 			g_tData.boom[i][j].shoot = false;
-		}*/
+		}
 
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
@@ -465,10 +507,38 @@ void BulletUpdate(int id)
 		if (!g_tData.bullet[id][i].shoot)
 		{
 			g_tData.bullet[id][i].x = -200;
+			g_tData.bullet[id][i].y = -200;
+			g_tData.bullet[id][i].dir = 0;
 
 			continue;
 		}
 
 		g_tData.bullet[id][i].x += BULLET_SPEED * g_tData.bullet[id][i].dir;
+	}
+}
+
+void BoomUpdate(int id)
+{	
+	for (int i = 0; i < BOOMCOUNT; ++i)
+	{
+		if (!g_tData.boom[id][i].shoot)
+		{
+			g_tData.boom[id][i].x = -300;
+			g_tData.boom[id][i].y = -300;
+
+			continue;
+		}
+
+		g_fMu[id][i] += 0.1f;
+
+		num1[id][i] = 1 - g_fMu[id][i];
+		num2[id][i] = num1[id][i] * num1[id][i];
+		mu2[id][i] = g_fMu[id][i] * g_fMu[id][i];
+
+		g_tData.boom[id][i].x = g_fOrgPosX[id][i] * num2[id][i] + 2 * g_fMidPosX[id][i] * num1[id][i] * g_fMu[id][i] + g_fTargetPosX[id][i] * mu2[id][i];
+		g_tData.boom[id][i].y = g_fOrgPosY[id][i] * num2[id][i] + 2 * g_fMidPosY[id][i] * num1[id][i] * g_fMu[id][i] + g_fTargetPosY[id][i] * mu2[id][i];
+
+		//g_tData.boom[id][i].x += BULLET_SPEED;
+		//g_tData.boom[id][i].y -= BULLET_SPEED;
 	}
 }

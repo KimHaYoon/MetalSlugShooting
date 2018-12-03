@@ -3,10 +3,10 @@
 #include "CInput.h"
 #include "CAnimation.h"
 #include "CTexture.h"
-#include "CBullet.h"
+//#include "CBullet.h"
 #include "CScene.h"
 #include "CItem.h"
-#include "CBoom.h"
+//#include "CBoom.h"
 #include "CNetwork.h"
 
 CPlayer::CPlayer()
@@ -50,6 +50,14 @@ void CPlayer::SetBulletInfo(BulletInfo* info)
 	}
 }
 
+void CPlayer::SetBoomInfo(BoomInfo * info)
+{
+	for (int i = 0; i < BOOMCOUNT; ++i)
+	{
+		m_pBoom[i].SetInfo(info[i]);
+	}
+}
+
 void CPlayer::ChangeMagazine()
 {
 	m_bChange = false;
@@ -63,28 +71,6 @@ void CPlayer::ChangeMagazine()
 	m_tInfo.magazinecnt -= 1;
 
 	m_tInfo.bulletcnt += 10;
-}
-
-void CPlayer::CreateBoom()
-{
-	/*
-	if (m_tInfo.boomcnt < 1)
-		return;
-
-	CBoom* pBoom = new CBoom("Boom");
-
-	if (!pBoom->Init(m_fPos, m_tInfo.dir))
-	{
-		if (pBoom)
-		{
-			delete pBoom;
-
-			pBoom = NULL;
-		}
-	}
-
-	m_pScene->AddObject(pBoom);
-	m_tInfo.boomcnt -= 1;*/
 }
 
 bool CPlayer::Init()
@@ -165,7 +151,7 @@ void CPlayer::Input(float fTime)
 		if (m_iIdle == 0)
 			return;
 
-		//GET_NETWORKINST->SetKeyData(Q_KEY);
+		GET_NETWORKINST->SetKeyData(Q_KEY);
 	}
 
 	else if (m_pInput->KeyDown("HPUP"))
@@ -201,12 +187,12 @@ void CPlayer::Update(float fTime)
 			m_pBullet[i].SetTexture("Bullet", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Bullet.bmp", true, RGB(0, 248, 0));
 		}		
 
-		/*for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < BOOMCOUNT; ++i)
 		{
 			m_pBoom[i].Init();	
 			m_pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
 
-		}*/
+		}
 
 		m_bScene = true;			// æ¿ √§øˆ¡·¿∏¥œ true 
 	}
@@ -229,10 +215,10 @@ void CPlayer::Update(float fTime)
 		m_pBullet[i].Update(fTime);
 	}
 
-	/*for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < BOOMCOUNT; ++i)
 	{
 		m_pBoom[i].Update(fTime);
-	}*/
+	}
 
 	if (m_pAnimation->GetCurrentAnimation() == 2 || m_pAnimation->GetCurrentAnimation() == 3 || 
 		m_pAnimation->GetCurrentAnimation() == 10 || m_pAnimation->GetCurrentAnimation() == 11)
@@ -264,10 +250,10 @@ void CPlayer::Render(HDC hDC, float fTime)
 		}
 	}
 
-	/*for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < BOOMCOUNT; ++i)
 	{
 		m_pBoom[i].Render(hDC, fTime);
-	}*/
+	}
 
 	TCHAR str[128];
 	if (m_tInfo.num == 1)

@@ -2,6 +2,7 @@
 
 #define PLAYER_WIDTH	150		// 플레이어 가로크기
 #define PLAYER_HEIGHT	100		// 플레이어 세로크기
+#define PLAYER_POS_Y	550		// 플레이어 y좌표
 #define PLAYER_SIT_HEIGHT 50	// 플레이어 앉을때 세로 크기
 #define BULLET_SIZE		20		// 총알 크기 20x20
 #define ITEM_SIZE		50		// 아이템 사이즈
@@ -24,6 +25,10 @@
 
 #define PLAYERMAX		2
 #define MAXCOUNT		50
+#define BOOMCOUNT		10
+
+#define DEFAULT_MID_HEIGHT 300.f
+#define BOOM_DIST 500.f
 
 #define PLAYER_SPEED	15.f
 #define BULLET_SPEED	30.f
@@ -59,9 +64,8 @@ struct ItemInfo
 
 struct BoomInfo
 {
-	int x;
-	int y;
-	int dir;
+	float x;
+	float y;
 	bool shoot;
 };
 
@@ -70,7 +74,7 @@ struct DATA
 	int  num;									// 1P, 2P			4
 	PlayerInfo	player[PLAYERMAX];				// 플레이어 정보		72
 	BulletInfo  bullet[PLAYERMAX][MAXCOUNT];	// 총알 정보			3400
-	//BoomInfo	boom[PLAYERMAX][3];				// 수류탄 정보
+	BoomInfo	boom[PLAYERMAX][BOOMCOUNT];				// 수류탄 정보
 };
 
 struct Key_DATA
