@@ -1,0 +1,29 @@
+게임을 플레이한다.
+↓
+시간이 흐른다.
+↓
+if ( timer == 10,40,70 )
+헬기 출현
+↓
+헬기 도착후 아이템 출현
+아이템 생성 후 random으로 ItemInfo 값 준다.	--> 10 - 3, 40 - 0,1, 70 - 2 고정인 경우 좋을 듯
+ItemInfo 값에 따라 해당되는 item으로 new 할당
+ItemInfo 0, 1, 2, 3(HP30, HP70, Magazine, Boom)
+HP30, HP70 --> CHealing 0,1
+-CHealing에서 ItemInfo값이 0인지 1인지에 따라 CHealing"체력 회복"값을 30, 또는 70으로 셋 해준다.
+Magazine --> CMagazine 2
+-CMagazine에서 생성될 때 1-3개 사이의 랜덤한 값으로 CMagazine"탄창 수"값을 셋 해준다.
+Boom --> CBoom 3
+↓
+(아이템 땅에 도착)
+item의 drop을 false
+↓
+캐릭터와 충돌
+HP30, HP70 --> CHealing
+-Player가 item과 충돌 되었을 때, 해당 Player"체력"을 즉시 CHealing"체력 회복"값 만큼 증가 시킨다.
+Magazine --> CMagazine
+-Player가 item과 충돌 되었을 때, 해당 Player"탄창 수"를 즉시 CMagazine"탄창 수"값 만큼 증가 시킨다.
+Boom --> CBoom
+-Player가 item과 충돌 되었을 때, 해당 Player"수류탄 수"를 즉시 +1 만큼 증가 시킨다.
+↓
+item delete
