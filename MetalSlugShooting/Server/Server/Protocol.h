@@ -40,7 +40,7 @@ struct PlayerInfo
 	int hp;				// 현재 HP
 	int dir;			// 바라보는 방향 -1:왼 1:오
 	int state;			// 현재상태 -> 애니메이션 출력 때문에...
-};						// 36byte
+};						
 
 struct BulletInfo
 {
@@ -49,14 +49,14 @@ struct BulletInfo
 	int y;				// 좌표 y
 	int dir;			// 총알의 방향
 	bool shoot;			// 발사했는지
-};						// 17btye
+};					
 
 struct ItemInfo
 {
 	int num;			// 아이템 정보 0:HP30회복 1:HP70회복 2:탄창 3:수류탄
 	int x;				// 좌표	x
 	int y;				// 좌표 y
-};						// 12byte
+};						
 
 struct BoomInfo
 {

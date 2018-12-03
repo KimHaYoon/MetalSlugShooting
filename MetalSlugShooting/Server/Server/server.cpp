@@ -21,14 +21,19 @@ Key_DATA	g_tKeyData;
 int g_iBulletCount[PLAYERMAX] = {};
 int g_iBoomCount[3] = {};
 
+RECT PlayerColl[PLAYERMAX] = {};
+RECT BulletColl[PLAYERMAX][MAXCOUNT];
+
 DWORD WINAPI ProcessGame(LPVOID arg);
 void Send(const char* buf, int len, string str = NULL);
 void Recv(char* buf, int len, string str = NULL);
 void RecvKeyAndDataUpdate();
 void Init();
-void DataUpdate(int id, Key_DATA keydata);
 void DataInit();
+void Update();
+void DataUpdate(int id, Key_DATA keydata);
 void BulletUpdate(int id);
+bool Collisition(RECT rc1, RECT rc2);
 
 int main(int argc, char *argv[])
 {
@@ -130,7 +135,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 	{
 		DWORD dwNow = GetTickCount();
 
-		if (dwTime + 100 > dwNow)
+		if (dwTime + 33 > dwNow)
 		{
 			continue;
 		}
@@ -154,7 +159,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 
 			if (g_iGameState == GAME_OK)
 			{
-				g_fTime += 0.1f;
+				g_fTime += 0.033f;
 				if (g_fTime > 3.f)
 				{
 					g_iGameState = GAME_PLAY;
@@ -167,6 +172,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				// key값 받기
 				//Recv((char*)&g_tKeyData, sizeof(g_tKeyData), "KeyData");
 				RecvKeyAndDataUpdate();
+				Update();
 				Send((char*)&g_tData, sizeof(DATA), "Data");
 			}
 		}
@@ -287,7 +293,10 @@ void DataUpdate(int id, Key_DATA keydata)
 		if (g_tData.player[id].bulletcnt < 1)
 			return;
 
-		g_iBulletCount[id] += 1;												// id의 총알 카운트 증가 
+		if (g_iBulletCount[id] >= MAXCOUNT)
+			g_iBulletCount[id] = 0;
+		g_iBulletCount[id] += 1;							// id의 총알 카운트 증가 
+
 		g_tData.player[id].bulletcnt -= 1;	// id의 보유한 총알 감소
 
 		if (g_tData.player[id].dir == -1)
@@ -311,6 +320,69 @@ void DataUpdate(int id, Key_DATA keydata)
 	}
 }
 
+bool Collisition(RECT rc1, RECT rc2)
+{
+	if (rc1.left > rc2.right)
+		return false;
+
+	if (rc1.right < rc2.left)
+		return false;
+
+	if (rc1.top > rc2.bottom)
+		return false;
+
+	if (rc1.bottom < rc2.top)
+		return false;
+
+	return true;
+}
+
+void Update()
+{
+	for (int i = 0; i < PLAYERMAX; ++i)
+	{
+		for (int j = 0; j < MAXCOUNT; ++j)
+		{
+			if (g_tData.bullet[i][j].shoot)
+			{
+				BulletColl[i][j] = { g_tData.bullet[i][j].x, g_tData.bullet[i][j].y,g_tData.bullet[i][j].x + 20, g_tData.bullet[i][j].y + 20 };
+			}
+		}
+
+		PlayerColl[i] = { g_tData.player[i].x + 20, g_tData.player[i].y, g_tData.player[i].x + 80, g_tData.player[i].y + 100 };
+		cout << PlayerColl[i].left << ", " << PlayerColl[i].top << ", " << PlayerColl[i].right << ", " << PlayerColl[i].bottom << endl;
+	}
+	
+	for (int j = 0; j < MAXCOUNT; ++j)
+	{
+		if (Collisition(PlayerColl[0], BulletColl[1][j]) && g_tData.bullet[1][j].shoot)
+		{
+			g_tData.player[0].hp -= BULLET_DAMAGE;
+			g_tData.bullet[1][j].shoot = false;
+		}
+
+		if (Collisition(PlayerColl[1], BulletColl[0][j]) && g_tData.bullet[0][j].shoot)
+		{
+			g_tData.player[1].hp -= BULLET_DAMAGE;
+			g_tData.bullet[0][j].shoot = false;
+		}
+
+		RECT Win = { 0, 0, WIN_WIDTH, WIN_HEIGHT };
+
+		for (int i = 0; i < PLAYERMAX; ++i)
+		{
+			if (!Collisition(Win, BulletColl[i][j]))
+			{
+				g_tData.bullet[i][j].x = -200;
+				g_tData.bullet[i][j].y = -200;
+				g_tData.bullet[i][j].dir = 0;
+				g_tData.bullet[i][j].num = i;
+				g_tData.bullet[i][j].shoot = false;
+			}
+		}
+	}
+}
+
 void DataInit()
 {
 	cout << "Data 초기화" << endl;
@@ -325,7 +397,7 @@ void DataInit()
 	g_tData.player[0].magazinecnt = 2;
 	g_tData.player[0].boomcnt = 0;
 	g_tData.player[0].bulletcnt = 100;
-	g_tData.player[0].hp = 30;
+	g_tData.player[0].hp = 100;
 	g_tData.player[0].dir = 1;
 
 	g_tData.player[1].num = 2;
@@ -361,6 +433,7 @@ void DataInit()
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
 		g_iGameState = GAME_READY;
+		//PlayerColl[i] = { g_tData.player[i].x + 20, g_tData.player[i].y, g_tData.player[i].x + 80, g_tData.player[i].y + 100 };
 	}
 }
 
