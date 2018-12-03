@@ -44,6 +44,8 @@ private:
 	Key_DATA			m_tKeyData;
 	int					m_iGameState;
 	bool				m_bRecv;
+	int					m_iTimeLimit;
+	bool				m_bWin[PLAYERMAX];
 
 	string				m_ServerIP;
 
@@ -53,10 +55,13 @@ public:
 	DATA	GetData()	const;
 
 	int		GetGameState()	const;
+	int		GetTimeLimit()	const;
+	bool	GetWin()		const;
 
 public:
 	void	SetClientNum(int Num);
 	void	SetKeyData(int key);
+	void	SetGameState(int iState);
 
 public:
 	bool Init();

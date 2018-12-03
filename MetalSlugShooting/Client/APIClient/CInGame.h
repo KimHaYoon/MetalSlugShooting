@@ -15,6 +15,10 @@ private:
 	class CPlayer*		m_pPlayer[2];
 	class CHPBar*		m_pHPBar[2];
 	class CHPGauge*		m_pHPGauge[2];
+	class CTimerUI*		m_pTimerUI[2];
+	class CWinOrLose*	m_pWinOrLoseUI;
+
+	int ten, one;
 	 
 public:
 	virtual bool Init();

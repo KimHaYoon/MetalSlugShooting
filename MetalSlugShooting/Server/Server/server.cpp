@@ -8,7 +8,7 @@ int g_iGameState = GAME_READY;
 
 
 float	g_fTime = 0.f;						// 현재 시간
-float	g_fTimeLimit = 90.f;			// 한계 시간
+float	g_fTimeLimit = 90.2f;				// 한계 시간
 int		g_iConnectNum = 0;		
 
 CRITICAL_SECTION	cs;
@@ -20,6 +20,8 @@ Key_DATA	g_tKeyData;
 
 int g_iBulletCount[PLAYERMAX] = {};
 int g_iBoomCount[3] = {};
+bool g_bWin[PLAYERMAX] = {false, false};
+bool g_bSend = false;
 
 RECT PlayerColl[PLAYERMAX] = {};
 RECT BulletColl[PLAYERMAX][MAXCOUNT];
@@ -33,6 +35,7 @@ void DataInit();
 void Update();
 void DataUpdate(int id, Key_DATA keydata);
 void BulletUpdate(int id);
+void IsWin();
 bool Collisition(RECT rc1, RECT rc2);
 
 int main(int argc, char *argv[])
@@ -142,13 +145,6 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 
 		dwTime = dwNow;
 
-		/*EnterCriticalSection(&cs);
-		int iClientCount = g_mapClient.size();
-		LeaveCriticalSection(&cs);
-
-		auto iter = g_mapClient.begin();
-		auto iterEnd = g_mapClient.end();*/
-
 		if (g_iConnectNum == 2)
 		{
 			if (g_iGameState == GAME_READY)
@@ -163,22 +159,39 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				if (g_fTime > 3.f)
 				{
 					g_iGameState = GAME_PLAY;
-					Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
 				}
+				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
 			}
 
 			if (g_iGameState == GAME_PLAY)
 			{
-				// key값 받기
-				//Recv((char*)&g_tKeyData, sizeof(g_tKeyData), "KeyData");
+				if (g_fTimeLimit <= 0.f)
+				{
+					//g_iGameState = GAME_END;
+					//Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_END");
+				}
+				int iTimeLimit = (int)g_fTimeLimit;
+				Send((char*)&iTimeLimit, sizeof(int), "제한시간");
+				cout << iTimeLimit << endl;
+				g_fTimeLimit -= 0.033f;
 				RecvKeyAndDataUpdate();
 				Update();
 				Send((char*)&g_tData, sizeof(DATA), "Data");
 			}
+
+			if (g_iGameState == GAME_END)
+			{
+				IsWin();
+				if (!g_bSend)
+				{
+					Send((char*)g_bWin, sizeof(g_bWin), "승패여부");
+					g_bSend = true;
+				}
+			}
 		}
 
 		else
-			Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK 1p만접속");
+			Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK 1P만접속");
 	}
 
 	return 0;
@@ -186,15 +199,6 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 
 void Send(const char * buf, int len, string str)
 {
-	/*auto iter = g_mapClient.begin();
-	auto iterEnd = g_mapClient.end();
-
-	for (iter; iter != iterEnd; ++iter)
-	{
-		send(*(iter->second), buf, len, 0);
-		cout << iter->first + 1 << "send " << str << endl;
-	}*/
-
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
 		if (g_socket[i] != NULL)
@@ -207,15 +211,6 @@ void Send(const char * buf, int len, string str)
 
 void Recv(char * buf, int len, string str)
 {
-	/*auto iter = g_mapClient.begin();
-	auto iterEnd = g_mapClient.end();
-
-	for (iter; iter != iterEnd; ++iter)
-	{
-		recv(*(iter->second), buf, len, 0);
-		cout << iter->first + 1 << "recv " << str << endl;
-	}*/
-
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
 		if (g_socket[i] != NULL)
@@ -311,12 +306,29 @@ void DataUpdate(int id, Key_DATA keydata)
 			g_tData.bullet[id][g_iBulletCount[id]].x = g_tData.player[id].x + 130;		// id의 x
 		}
 
-		g_tData.bullet[id][g_iBulletCount[id]].num = id;						// 이 총알 주인은 id
 		g_tData.bullet[id][g_iBulletCount[id]].y = g_tData.player[id].y;		// id의 y
 		g_tData.bullet[id][g_iBulletCount[id]].dir = g_tData.player[id].dir;	// id의 방향
 		g_tData.bullet[id][g_iBulletCount[id]].shoot = true;					// 총알이 발사됨!
 
 		//cout << "CreateBullet" << endl;
+	}
+}
+
+void IsWin()
+{
+	if (g_fTimeLimit >= 0.0001f)
+	{
+		if (g_tData.player[0].hp > g_tData.player[1].hp)
+		{
+			g_bWin[0] = true;
+			g_bWin[1] = false;
+		}
+
+		else
+		{
+			g_bWin[0] = true;
+			g_bWin[1] = false;
+		}
 	}
 }
 
@@ -357,13 +369,31 @@ void Update()
 	{
 		if (Collisition(PlayerColl[0], BulletColl[1][j]) && g_tData.bullet[1][j].shoot)
 		{
-			g_tData.player[0].hp -= BULLET_DAMAGE;
+			if (g_tData.player[0].hp > 0)
+				g_tData.player[0].hp -= BULLET_DAMAGE;
+
+			else
+			{
+				//g_iGameState = GAME_END;
+				g_bWin[0] = false;
+				g_bWin[1] = true;
+			}
+
 			g_tData.bullet[1][j].shoot = false;
 		}
 
 		if (Collisition(PlayerColl[1], BulletColl[0][j]) && g_tData.bullet[0][j].shoot)
 		{
-			g_tData.player[1].hp -= BULLET_DAMAGE;
+			if (g_tData.player[1].hp > 0)
+				g_tData.player[1].hp -= BULLET_DAMAGE;
+
+			else
+			{
+				//g_iGameState = GAME_END;
+				g_bWin[0] = true;
+				g_bWin[1] = false;
+			}
+
 			g_tData.bullet[0][j].shoot = false;
 		}
 
@@ -376,7 +406,6 @@ void Update()
 				g_tData.bullet[i][j].x = -200;
 				g_tData.bullet[i][j].y = -200;
 				g_tData.bullet[i][j].dir = 0;
-				g_tData.bullet[i][j].num = i;
 				g_tData.bullet[i][j].shoot = false;
 			}
 		}
@@ -417,7 +446,6 @@ void DataInit()
 			g_tData.bullet[i][j].x = -200;
 			g_tData.bullet[i][j].y = -200;
 			g_tData.bullet[i][j].dir = 0;
-			g_tData.bullet[i][j].num = i;
 			g_tData.bullet[i][j].shoot = false;
 		}
 

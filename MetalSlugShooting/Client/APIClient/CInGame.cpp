@@ -9,16 +9,23 @@
 #include "CHPBar.h"
 #include "CHPGauge.h"
 #include "CNetwork.h"
+#include "CTimerUI.h"
+#include "CWinOrLose.h"
 
 CInGame::CInGame() : 
-	m_pBackGround(NULL)
+	m_pBackGround(NULL),
+	m_pWinOrLoseUI(NULL)
 {
 	for (int i = 0; i < 2; ++i)
 	{
 		m_pPlayer[i] = NULL;
 		m_pHPBar[i] = NULL;
 		m_pHPGauge[i] = NULL;
+		m_pTimerUI[i] = NULL;
 	}
+
+	ten = 9;
+	one = 0;
 }
 
 
@@ -109,7 +116,38 @@ bool CInGame::Init()
 	m_pHPGauge[1]->SetHP(m_pPlayer[1]->GetHP());
 	m_pScene->AddObject(m_pHPGauge[1]);
 	//=============================================================================================================
+	// TimerUI
+	// 십의 자리
+	m_pTimerUI[0] = new CTimerUI("Timer_Ten");
+	if (!m_pTimerUI[0]->Init())
+	{
+		return false;
+	}
+	m_pTimerUI[0]->SetTexture("Num", m_hInst, m_hDC, L"Texture/TimerUI.bmp", true);
+	m_pTimerUI[0]->SetPos(547.5f, 3.f);
+	m_pTimerUI[0]->SetNum(9);
+	m_pScene->AddObject(m_pTimerUI[0]);
+	// 일의자리
+	m_pTimerUI[1] = new CTimerUI("Timer_one");
+	if (!m_pTimerUI[1]->Init())
+	{
+		return false;
+	}
+	m_pTimerUI[1]->SetTexture("Num", m_hInst, m_hDC, L"Texture/TimerUI.bmp", true);
+	m_pTimerUI[1]->SetPos(627.5f, 3.f);
+	m_pTimerUI[1]->SetNum(0);
+	m_pScene->AddObject(m_pTimerUI[1]);
 
+	m_pWinOrLoseUI = new CWinOrLose("WinOrLose");
+	if (!m_pWinOrLoseUI->Init())
+	{
+		return false;
+	}
+	m_pWinOrLoseUI->SetTexture("WinOrLose", m_hInst, m_hDC, L"Texture/winlose.bmp", true);
+	m_pWinOrLoseUI->SetPos(440.f, 350.f);
+	m_pWinOrLoseUI->SetEnable(false);
+	m_pScene->AddObject(m_pWinOrLoseUI);
+	
 	return true;
 }
 
@@ -126,6 +164,21 @@ void CInGame::Update(float fTime)
 		m_pPlayer[i]->SetPlayerInfo(tData.player[i]);
 		m_pHPGauge[i]->SetHP(m_pPlayer[i]->GetHP());
 		m_pPlayer[i]->SetBulletInfo(tData.bullet[i]);
+	}
+
+	if (GET_NETWORKINST->GetGameState() == GAME_PLAY)
+	{
+		int TimeLimit = GET_NETWORKINST->GetTimeLimit();
+		ten = TimeLimit / 10;
+		m_pTimerUI[0]->SetNum(ten);
+		one = TimeLimit % 10;
+		m_pTimerUI[1]->SetNum(one);
+	}
+
+	if (GET_NETWORKINST->GetGameState() == GAME_END)
+	{
+		m_pWinOrLoseUI->SetWinOrLose(GET_NETWORKINST->GetWin());
+		m_pWinOrLoseUI->SetEnable(true);
 	}
 }
 

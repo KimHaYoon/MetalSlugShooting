@@ -155,6 +155,12 @@ void CGameFramework::Input(float fTime)
 int CGameFramework::Update(float fTime)
 {
 	GET_NETWORKINST->Update();
+#ifdef SERVERON
+
+#else
+	GET_NETWORKINST->SetGameState(GAME_PLAY);
+#endif // SERVERON
+
 
 	return m_pSceneManager->Update(fTime);
 }

@@ -44,7 +44,6 @@ struct PlayerInfo
 
 struct BulletInfo
 {
-	int num;			// ÃÑ¾ËÀÇ ÁÖÀÎ	1:1p 2:2p
 	int x;				// ÁÂÇ¥ x
 	int y;				// ÁÂÇ¥ y
 	int dir;			// ÃÑ¾ËÀÇ ¹æÇâ
@@ -60,7 +59,6 @@ struct ItemInfo
 
 struct BoomInfo
 {
-	int num;
 	int x;
 	int y;
 	int dir;
