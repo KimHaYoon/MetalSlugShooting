@@ -45,11 +45,15 @@ void CHPGauge::Update(float fTime)
 
 	if (m_iPlayerNum == 1)
 	{
+		if (m_iHP <= 0)
+			m_iHP = 0;
 		m_fHPStartPosX = (100 - m_iHP) * 3.1f;
 	}
 
 	else if (m_iPlayerNum == 2)
 	{
+		if (m_iHP <= 0)
+			m_iHP = 0;
 		m_fSize = float2(m_iHP * 3.1f, 32.f);
 	}
 }

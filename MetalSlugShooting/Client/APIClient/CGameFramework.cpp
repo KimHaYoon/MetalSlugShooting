@@ -65,12 +65,6 @@ CGameFramework::~CGameFramework()
 
 bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * pClass, int iIconID, UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer)
 {
-#ifdef SERVERON
-	if (!GET_NETWORKINST->Init())
-	{
-		return false;
-	}
-#endif
 	srand((unsigned)time(NULL));
 	m_hInst = hInst;
 	m_iWidth = iWidth;
@@ -102,7 +96,14 @@ bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * p
 	if (!m_pSceneManager->Init(m_hInst, m_hDC, m_pInput))
 	{
 		return false;
+	}	
+
+#ifdef SERVERON
+	if (!GET_NETWORKINST->Init())
+	{
+		return false;
 	}
+#endif
 
 	// 백버퍼 생성
 	m_pBackBuffer = new CTexture;
@@ -158,7 +159,7 @@ int CGameFramework::Update(float fTime)
 #ifdef SERVERON
 
 #else
-	GET_NETWORKINST->SetGameState(GAME_PLAY);
+	GET_NETWORKINST->SetGameState(GAME_OK);
 #endif // SERVERON
 
 

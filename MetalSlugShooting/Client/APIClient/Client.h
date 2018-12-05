@@ -24,6 +24,11 @@ using namespace std;
 // network class ¥¬ ΩÃ±€≈Ê¿∏∑Œ ¿€º∫
 #define GET_NETWORKINST		CNetwork::GetInstance()
 #define DESTROY_NETWORK		CNetwork::DestroyInstance();
+
+// CSceneManager
+//#define GET_SCENEMANAGER	CSceneManager::GetInstance();
+//#define DESTROY_SCENEMANAGER	CSceneManager::DestroyInstance()
+
 //========================================
 
 typedef struct FLOAT2

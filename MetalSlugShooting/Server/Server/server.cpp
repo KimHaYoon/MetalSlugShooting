@@ -33,6 +33,7 @@ float num1[PLAYERMAX][BOOMCOUNT], num2[PLAYERMAX][BOOMCOUNT], mu2[PLAYERMAX][BOO
 RECT PlayerColl[PLAYERMAX] = {};
 RECT BulletColl[PLAYERMAX][MAXCOUNT];
 RECT BoomColl[PLAYERMAX][BOOMCOUNT];
+RECT Win = { 0, 0, WIN_WIDTH, WIN_HEIGHT };
 
 DWORD WINAPI ProcessGame(LPVOID arg);
 void Send(const char* buf, int len, string str = NULL);
@@ -45,7 +46,7 @@ void DataUpdate(int id, Key_DATA keydata);
 void BulletUpdate(int id);
 void BoomUpdate(int id);
 void IsWin();
-bool Collisition(RECT rc1, RECT rc2);
+bool Collision(RECT rc1, RECT rc2);
 
 int main(int argc, char *argv[])
 {
@@ -112,6 +113,7 @@ int main(int argc, char *argv[])
 		int iConnectNum = g_iConnectNum;
 
 		g_tData.num = iConnectNum + 1;
+		g_tData.player[iConnectNum].num = iConnectNum + 1;
 		send(client_sock, (char*)&g_tData, sizeof(DATA), 0);			// 초기 데이터 전송
 
 
@@ -164,11 +166,14 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 
 			if (g_iGameState == GAME_OK)
 			{
-				g_fTime += 0.033f;
-				if (g_fTime > 3.f)
+				int iTime = (int)g_fTime;
+				if (g_fTime > 6.f)
 				{
 					g_iGameState = GAME_PLAY;
 				}
+				Send((char*)&iTime, sizeof(int), "시작 타이머");
+				g_fTime += 0.033f;
+				Send((char*)&g_tData, sizeof(DATA), "Data");
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
 			}
 
@@ -178,14 +183,19 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				Send((char*)&iTimeLimit, sizeof(int), "제한시간");
 				cout << iTimeLimit << endl;
 				g_fTimeLimit -= 0.033f;
+
 				RecvKeyAndDataUpdate();
 				Update();
 				Send((char*)&g_tData, sizeof(DATA), "Data");
+
 				if (g_fTimeLimit <= 0.f)
 				{
 					IsWin();
 					g_iGameState = GAME_END;
 				}
+
+				cout << "1P : " << g_iBoomCount[0] << "	2P : " << g_iBoomCount[1] << endl;
+
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
 			}
 
@@ -269,16 +279,32 @@ void DataUpdate(int id, Key_DATA keydata)
 
 	if (keydata.key == LEFT_KEY)
 	{
-		g_tData.player[id].dir = -1;
-		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
-		g_tData.player[id].state = 4;
+		if (Collision(Win, PlayerColl[id]))
+		{
+			g_tData.player[id].dir = -1;
+			g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+			g_tData.player[id].state = 4;
+		}
+
+		else
+		{
+			g_tData.player[id].x -= PLAYER_SPEED * g_tData.player[id].dir;
+		}
 	}
 
 	if (keydata.key == RIGHT_KEY)
 	{
-		g_tData.player[id].dir = 1;
-		g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
-		g_tData.player[id].state = 5;
+		if (Collision(Win, PlayerColl[id]))
+		{
+			g_tData.player[id].dir = 1;
+			g_tData.player[id].x += PLAYER_SPEED * g_tData.player[id].dir;
+			g_tData.player[id].state = 5;
+		}
+
+		else
+		{
+			g_tData.player[id].x -= PLAYER_SPEED * g_tData.player[id].dir;
+		}
 	}
 
 	if (keydata.key == DOWN_KEY)
@@ -344,11 +370,23 @@ void DataUpdate(int id, Key_DATA keydata)
 			g_tData.player[id].state = 11;
 		}
 
-		g_fTargetPosX[id][g_iBoomCount[id]] = g_tData.player[id].x + BOOM_DIST * g_tData.player[id].dir;
-		g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;
+		/*g_fTargetPosX[id][g_iBoomCount[id]] = g_tData.player[id].x + BOOM_DIST * g_tData.player[id].dir;
+		g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;*/
+		if (id == 0)
+		{
+			g_fTargetPosX[id][g_iBoomCount[id]] = (PlayerColl[1].left + PlayerColl[1].right) / 2;
+			g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;
+		}
+
+		else
+		{
+			g_fTargetPosX[id][g_iBoomCount[id]] = (PlayerColl[0].left + PlayerColl[0].right) / 2;
+			g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;
+		}
+
 		g_fOrgPosX[id][g_iBoomCount[id]] = g_tData.player[id].x;
 		g_fOrgPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y;
-		g_fMidPosX[id][g_iBoomCount[id]] = (g_tData.player[id].x + g_fTargetPosY[id][g_iBoomCount[id]]) / 2;
+		g_fMidPosX[id][g_iBoomCount[id]] = (g_tData.player[id].x + g_fTargetPosX[id][g_iBoomCount[id]]) / 2;
 		g_fMidPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y - DEFAULT_MID_HEIGHT;
 		g_fMu[id][g_iBoomCount[id]] = 0.f;
 
@@ -381,7 +419,7 @@ void IsWin()
 
 }
 
-bool Collisition(RECT rc1, RECT rc2)
+bool Collision(RECT rc1, RECT rc2)
 {
 	if (rc1.left > rc2.right)
 		return false;
@@ -410,13 +448,23 @@ void Update()
 			}
 		}
 
-		PlayerColl[i] = { g_tData.player[i].x + 20, g_tData.player[i].y, g_tData.player[i].x + 80, g_tData.player[i].y + 100 };
-		cout << PlayerColl[i].left << ", " << PlayerColl[i].top << ", " << PlayerColl[i].right << ", " << PlayerColl[i].bottom << endl;
+		for (int j = 0; j < BOOMCOUNT; ++j)
+		{
+			if (g_tData.boom[i][j].shoot)
+			{
+				BoomColl[i][j] = { (LONG)g_tData.boom[i][j].x, (LONG)g_tData.boom[i][j].y, (LONG)g_tData.boom[i][j].x + 38, (LONG)g_tData.boom[i][j].y + 38 };
+			}
+		}
+
+		PlayerColl[i] = { g_tData.player[i].x + 80, g_tData.player[i].y, g_tData.player[i].x + 120, g_tData.player[i].y + 100 };
+		//cout << PlayerColl[i].left << ", " << PlayerColl[i].top << ", " << PlayerColl[i].right << ", " << PlayerColl[i].bottom << endl;
 	}
 	
+
 	for (int j = 0; j < MAXCOUNT; ++j)
 	{
-		if (Collisition(PlayerColl[0], BulletColl[1][j]) && g_tData.bullet[1][j].shoot)
+		// 총알과 플레이어 충돌
+		if (Collision(PlayerColl[0], BulletColl[1][j]) && g_tData.bullet[1][j].shoot)
 		{
 			if (g_tData.player[0].hp > 0)
 				g_tData.player[0].hp -= BULLET_DAMAGE;
@@ -424,7 +472,7 @@ void Update()
 			g_tData.bullet[1][j].shoot = false;
 		}
 
-		if (Collisition(PlayerColl[1], BulletColl[0][j]) && g_tData.bullet[0][j].shoot)
+		if (Collision(PlayerColl[1], BulletColl[0][j]) && g_tData.bullet[0][j].shoot)
 		{
 			if (g_tData.player[1].hp > 0)
 				g_tData.player[1].hp -= BULLET_DAMAGE;
@@ -432,16 +480,69 @@ void Update()
 			g_tData.bullet[0][j].shoot = false;
 		}
 
-		RECT Win = { 0, 0, WIN_WIDTH, WIN_HEIGHT };
-
+		// 총알이 맵밖으로벗어나는지 체크
 		for (int i = 0; i < PLAYERMAX; ++i)
 		{
-			if (!Collisition(Win, BulletColl[i][j]))
+			if (!Collision(Win, BulletColl[i][j]))
 			{
 				g_tData.bullet[i][j].x = -200;
 				g_tData.bullet[i][j].y = -200;
 				g_tData.bullet[i][j].dir = 0;
 				g_tData.bullet[i][j].shoot = false;
+			}
+
+		}
+	}
+
+	for (int j = 0; j < BOOMCOUNT; ++j)
+	{
+		// 수류탄과 플레이어 충돌
+		if (Collision(PlayerColl[0], BoomColl[1][j]) && g_tData.boom[1][j].shoot)
+		{
+			if (g_tData.player[0].hp > 0)
+			{
+				g_tData.player[0].hp -= BOOM_DAMAGE;
+
+				if (g_tData.player[0].hp <= 0)
+				{
+					g_tData.player[0].hp = 0;
+				}
+			}
+
+			g_tData.boom[1][j].shoot = false;
+		}
+
+		if (Collision(PlayerColl[1], BoomColl[0][j]) && g_tData.boom[0][j].shoot)
+		{
+			if (g_tData.player[1].hp > 0)
+			{
+				g_tData.player[1].hp -= BOOM_DAMAGE;
+
+				if (g_tData.player[1].hp <= 0)
+				{
+					g_tData.player[1].hp = 0;
+				}
+			}
+
+			g_tData.boom[0][j].shoot = false;
+		}
+
+		for (int i = 0; i < PLAYERMAX; ++i)
+		{
+			// 총알이 맵밖으로벗어나는지 체크
+			if (!Collision(Win, BoomColl[i][j]))
+			{
+				g_tData.boom[i][j].x = -300;
+				g_tData.boom[i][j].y = -300;
+				g_tData.boom[i][j].shoot = false;
+			}
+
+			// 총알이 땅에 닿았는지 체크
+			if (BoomColl[i][j].bottom >= PLAYER_POS_Y + PLAYER_HEIGHT)
+			{
+				g_tData.boom[i][j].x = -300;
+				g_tData.boom[i][j].y = -300;
+				g_tData.boom[i][j].shoot = false;
 			}
 
 			if (g_tData.player[i].hp <= 0)
@@ -451,6 +552,19 @@ void Update()
 			}
 		}
 	}
+	
+	/*for (int i = 0; i < PLAYERMAX; ++i)
+	{
+		if (!Collision(Win, PlayerColl[i]))
+		{
+			g_bMove[i] = false;
+		}
+		
+		else
+		{
+			g_bMove[i] = true;
+		}
+	}*/
 }
 
 void DataInit()
@@ -459,20 +573,20 @@ void DataInit()
 
 	//g_iConnectNum = 0;
 	g_tData.num = 0;
-	g_tData.player[0].num = 1;
+	g_tData.player[0].num = -1;
 	g_tData.player[0].x = 300;
 	g_tData.player[0].y = PLAYER_POS_Y;
 	g_tData.player[0].magazinecnt = 2;
-	g_tData.player[0].boomcnt = BOOMCOUNT;
+	g_tData.player[0].boomcnt = 100;
 	g_tData.player[0].bulletcnt = 100;
 	g_tData.player[0].hp = 100;
 	g_tData.player[0].dir = 1;
 
-	g_tData.player[1].num = 2;
+	g_tData.player[1].num = -1;
 	g_tData.player[1].x = 500;
 	g_tData.player[1].y = PLAYER_POS_Y;
 	g_tData.player[1].magazinecnt = 2;
-	g_tData.player[1].boomcnt = 0;
+	g_tData.player[1].boomcnt = 100;
 	g_tData.player[1].bulletcnt = 100;
 	g_tData.player[1].hp = 100;
 	g_tData.player[1].dir = -1;
@@ -529,7 +643,7 @@ void BoomUpdate(int id)
 			continue;
 		}
 
-		g_fMu[id][i] += 0.1f;
+		g_fMu[id][i] += 0.05f;
 
 		num1[id][i] = 1 - g_fMu[id][i];
 		num2[id][i] = num1[id][i] * num1[id][i];
@@ -537,8 +651,5 @@ void BoomUpdate(int id)
 
 		g_tData.boom[id][i].x = g_fOrgPosX[id][i] * num2[id][i] + 2 * g_fMidPosX[id][i] * num1[id][i] * g_fMu[id][i] + g_fTargetPosX[id][i] * mu2[id][i];
 		g_tData.boom[id][i].y = g_fOrgPosY[id][i] * num2[id][i] + 2 * g_fMidPosY[id][i] * num1[id][i] * g_fMu[id][i] + g_fTargetPosY[id][i] * mu2[id][i];
-
-		//g_tData.boom[id][i].x += BULLET_SPEED;
-		//g_tData.boom[id][i].y -= BULLET_SPEED;
 	}
 }

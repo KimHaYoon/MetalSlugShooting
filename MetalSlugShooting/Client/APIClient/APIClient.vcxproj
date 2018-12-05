@@ -162,6 +162,8 @@
     <ClInclude Include="CInput.h" />
     <ClInclude Include="CItem.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="CLobby.h" />
+    <ClInclude Include="CLobbyTimerUI.h" />
     <ClInclude Include="CMagazine.h" />
     <ClInclude Include="CNetwork.h" />
     <ClInclude Include="CPlayer.h" />
@@ -192,6 +194,8 @@
     <ClCompile Include="CInGame.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CItem.cpp" />
+    <ClCompile Include="CLobby.cpp" />
+    <ClCompile Include="CLobbyTimerUI.cpp" />
     <ClCompile Include="CMagazine.cpp" />
     <ClCompile Include="CNetwork.cpp" />
     <ClCompile Include="CPlayer.cpp" />

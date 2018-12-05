@@ -39,15 +39,8 @@ void CTimerUI::Update(float fTime)
 {
 	CGameObject::Update(fTime);
 
-	if (m_iNum != 0)
-	{
-		m_pAnimation->SetFrameX(m_iNum);
-	}
+	m_pAnimation->SetFrameX(m_iNum);
 
-	else
-	{
-		m_pAnimation->SetFrameX(0);
-	}
 }
 
 void CTimerUI::Render(HDC hDC, float fTime)

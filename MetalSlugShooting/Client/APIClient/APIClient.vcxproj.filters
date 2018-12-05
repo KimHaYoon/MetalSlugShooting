@@ -85,6 +85,12 @@
     <Filter Include="03. 오브젝트\03. 총알, 수류탄">
       <UniqueIdentifier>{06747a26-d062-43fc-90c6-261c57818b47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. 오브젝트\05. UI\02. 타이머\01. Lobby">
+      <UniqueIdentifier>{3e3f1eb4-46d9-42cb-b81e-4bdbb27a575a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\05. UI\02. 타이머\02. Ingame">
+      <UniqueIdentifier>{a183cb84-0a27-487d-b061-1825947ed50e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -165,13 +171,19 @@
     <ClInclude Include="CNetwork.h">
       <Filter>00. Network</Filter>
     </ClInclude>
-    <ClInclude Include="CTimerUI.h">
-      <Filter>03. 오브젝트\05. UI\02. 타이머</Filter>
-    </ClInclude>
     <ClInclude Include="CWinOrLose.h">
       <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
     </ClInclude>
     <ClInclude Include="CBoomBullet.h">
+      <Filter>03. 오브젝트\03. 총알, 수류탄</Filter>
+    </ClInclude>
+    <ClInclude Include="CLobby.h">
+      <Filter>02. 게임 장면\02. 로비</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimerUI.h">
+      <Filter>03. 오브젝트\05. UI\02. 타이머\02. Ingame</Filter>
+    </ClInclude>
+    <ClInclude Include="CLobbyTimerUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,13 +254,19 @@
     <ClCompile Include="CNetwork.cpp">
       <Filter>00. Network</Filter>
     </ClCompile>
-    <ClCompile Include="CTimerUI.cpp">
-      <Filter>03. 오브젝트\05. UI\02. 타이머</Filter>
-    </ClCompile>
     <ClCompile Include="CWinOrLose.cpp">
       <Filter>03. 오브젝트\05. UI\03. 승패</Filter>
     </ClCompile>
     <ClCompile Include="CBoomBullet.cpp">
+      <Filter>03. 오브젝트\03. 총알, 수류탄</Filter>
+    </ClCompile>
+    <ClCompile Include="CLobby.cpp">
+      <Filter>02. 게임 장면\02. 로비</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimerUI.cpp">
+      <Filter>03. 오브젝트\05. UI\02. 타이머\02. Ingame</Filter>
+    </ClCompile>
+    <ClCompile Include="CLobbyTimerUI.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

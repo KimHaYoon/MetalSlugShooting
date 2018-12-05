@@ -190,7 +190,7 @@ void CPlayer::Update(float fTime)
 		for (int i = 0; i < BOOMCOUNT; ++i)
 		{
 			m_pBoom[i].Init();	
-			m_pBoom->SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
+			m_pBoom[i].SetTexture("Boom", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/Boom.bmp", true);
 
 		}
 
@@ -224,7 +224,7 @@ void CPlayer::Update(float fTime)
 		m_pAnimation->GetCurrentAnimation() == 10 || m_pAnimation->GetCurrentAnimation() == 11)
 	{
 		m_iIdle = 0;
-		if (m_pAnimation->GetAnimationFrameEnd())
+		if (m_pAnimation->GetFrameX() == 3)
 		{
 			m_iIdle = 1;
 		}
@@ -248,13 +248,14 @@ void CPlayer::Render(HDC hDC, float fTime)
 		{
 			m_pBullet[i].Render(hDC, fTime);
 		}
+
+		for (int i = 0; i < BOOMCOUNT; ++i)
+		{
+			m_pBoom[i].Render(hDC, fTime);
+		}
 	}
 
-	for (int i = 0; i < BOOMCOUNT; ++i)
-	{
-		m_pBoom[i].Render(hDC, fTime);
-	}
-
+#ifdef _DEBUG
 	TCHAR str[128];
 	if (m_tInfo.num == 1)
 	{
@@ -266,6 +267,15 @@ void CPlayer::Render(HDC hDC, float fTime)
 
 		wsprintf(str, L"HP:%d", m_tInfo.hp);
 		TextOut(hDC, 50, 160, str, lstrlen(str));
+
+		//for (int i = 0; i < BOOMCOUNT; ++i)
+		//{
+		//	wsprintf(str, L"ÆøÅº %d : %d %d", i, (int)m_pBoom[i].GetPos().x, (int)m_pBoom[i].GetPos().y);
+		//	TextOut(hDC, 50, 200 + i * 30, str, lstrlen(str));
+		//}
+
+		Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
+
 	}
 
 	else if (m_tInfo.num == 2)
@@ -278,6 +288,10 @@ void CPlayer::Render(HDC hDC, float fTime)
 
 		wsprintf(str, L"HP:%d", m_tInfo.hp);
 		TextOut(hDC, 1100, 160, str, lstrlen(str));
+
+		Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
 	}
+#endif // _DEBUG
+
 
 }

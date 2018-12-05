@@ -138,6 +138,7 @@ bool CInGame::Init()
 	m_pTimerUI[1]->SetNum(0);
 	m_pScene->AddObject(m_pTimerUI[1]);
 
+	// ½ÂÆÐ¿©ºÎ
 	m_pWinOrLoseUI = new CWinOrLose("WinOrLose");
 	if (!m_pWinOrLoseUI->Init())
 	{
@@ -184,9 +185,5 @@ void CInGame::Update(float fTime)
 }
 
 void CInGame::Render(HDC hDC, float fTime)
-{
-}
-
-void CInGame::RecvInitData()
 {
 }

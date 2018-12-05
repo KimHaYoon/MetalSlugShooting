@@ -25,9 +25,5 @@ public:
 	virtual void Input(float fTime);
 	virtual void Update(float fTime);
 	virtual void Render(HDC hDC, float fTime);
-
-public:
-	// 서버랑 통신하는 함수
-	void RecvInitData();
 };
 

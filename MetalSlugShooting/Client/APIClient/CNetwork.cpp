@@ -9,6 +9,7 @@ CNetwork::CNetwork() :
 	m_bRecv(false)
 {
 	m_iTimeLimit = 0;
+	m_iTime = 0;
 }
 
 
@@ -59,9 +60,22 @@ int CNetwork::GetTimeLimit() const
 	return m_iTimeLimit;
 }
 
+int CNetwork::GetTime() const
+{
+	return m_iTime;
+}
+
 bool CNetwork::GetWin() const
 {
 	return m_bWin[m_iClient - 1];
+}
+
+bool CNetwork::Login(int iNum) const
+{
+	if (m_tData.player[iNum - 1].num == iNum)
+		return true;
+
+	return false;
 }
 
 bool CNetwork::Init()
@@ -118,6 +132,15 @@ void CNetwork::Update()
 {
 	if (m_iGameState != GAME_PLAY)
 	{
+		if (m_iGameState == GAME_OK)
+		{
+			recv(m_Sock, (char*)&m_iTime, sizeof(int), 0);
+			_cprintf("recv Time : %d\n", m_iTime);
+
+			recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
+			_cprintf("recv Data \n");
+		}
+
 		recv(m_Sock, (char*)&m_iGameState, sizeof(int), 0);
 		_cprintf("recv GameState %d\n", m_iGameState);
 
@@ -159,6 +182,7 @@ void CNetwork::Update()
 
 void CNetwork::Render(HDC hdc)
 {
+#ifdef _DEBUG
 	TCHAR str[128] = {};
 	TCHAR time[128] = {};
 	if (m_iGameState == GAME_READY)
@@ -168,6 +192,8 @@ void CNetwork::Render(HDC hdc)
 
 	else if (m_iGameState == GAME_OK)
 	{
+		wsprintf(time, L"Time : %d", m_iTime);
+		TextOut(hdc, 400, 200, time, lstrlen(time));
 		wsprintf(str, L"GameState : Game 준비완료");
 	}
 
@@ -183,6 +209,20 @@ void CNetwork::Render(HDC hdc)
 	}
 	TextOut(hdc, 400, 100, str, lstrlen(str));
 	TextOut(hdc, 400, 200, time, lstrlen(time));
+
+	if (Login(1))
+	{
+		wsprintf(str, L"1P Login");
+		TextOut(hdc, 50, 160, str, lstrlen(str));
+	}
+
+	if (Login(2))
+	{
+		wsprintf(str, L"2P Login");
+		TextOut(hdc, 1100, 160, str, lstrlen(str));
+	}
+
+#endif // _DEBUG
 }
 
 void CNetwork::LoadServerIPAddress()

@@ -11,10 +11,15 @@ public:
 private:
 	class CScene*		m_pCurScene;
 	class CScene*		m_pNextScene;
+
+	class CScene*		m_pLobbyScene;
+	class CScene*		m_pIngameScene;
 	class CInput*		m_pInput;
 
 	HDC			m_hDC;
 	HINSTANCE	m_hInst;
+
+	bool				m_bChange;
 
 public:
 	class CScene*	GetNextScene() const;
@@ -28,6 +33,7 @@ public:
 	int Update(float fTime);
 	void Render(HDC hDC, float fTime);
 	int ChangeScene();
+	int ChangeScene(class CScene* pScene);
 	void SetNextScene(class CScene* pScene);
 	class CScene* CreateScene();
 };

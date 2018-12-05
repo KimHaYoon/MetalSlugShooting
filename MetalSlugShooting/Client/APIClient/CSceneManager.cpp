@@ -1,11 +1,16 @@
 #include "stdafx.h"
 #include "CSceneManager.h"
 #include "CScene.h"
+#include "CLobby.h"
 #include "CInGame.h"
+#include "CNetwork.h"
 
 CSceneManager::CSceneManager() :
 	m_pCurScene(NULL),
-	m_pNextScene(NULL)
+	m_pNextScene(NULL),
+	m_pLobbyScene(NULL),
+	m_pIngameScene(NULL),
+	m_bChange(false)
 {
 }
 
@@ -41,16 +46,26 @@ bool CSceneManager::Init(HINSTANCE hInst, HDC hDC, class CInput* pInput)
 	m_hDC = hDC;
 	m_pInput = pInput;
 
-	m_pCurScene = CreateScene();
+	//m_pCurScene = CreateScene();
+	//m_pCurScene->CreateSceneScript<CLobby>();
 
-	m_pCurScene->CreateSceneScript<CInGame>();
+	//m_pNextScene = CreateScene();
+	//m_pNextScene->CreateSceneScript<CInGame>();
 
+	m_pLobbyScene = CreateScene();
+	m_pLobbyScene->CreateSceneScript<CLobby>();
+
+	m_pIngameScene = CreateScene();
+	m_pIngameScene->CreateSceneScript<CInGame>();
+	
+	m_pCurScene = m_pLobbyScene;
 	return true;
 }
 
 int CSceneManager::Input(float fTime)
 {
 	m_pCurScene->Input(fTime);
+
 	return 0;
 }
 
@@ -58,7 +73,12 @@ int CSceneManager::Update(float fTime)
 {
 	m_pCurScene->Update(fTime);
 
-	return ChangeScene();
+	if (GET_NETWORKINST->GetGameState() == GAME_PLAY && !m_bChange)
+	{
+		return ChangeScene(m_pIngameScene);
+	}
+
+	return SC_NONE;
 }
 
 void CSceneManager::Render(HDC hDC, float fTime)
@@ -79,6 +99,27 @@ int CSceneManager::ChangeScene()
 
 		m_pCurScene = m_pNextScene;
 		m_pNextScene = NULL;
+
+		return SC_CHANGE;
+	}
+
+	return SC_NONE;
+}
+
+int CSceneManager::ChangeScene(CScene * pScene)
+{
+	if (pScene)
+	{
+		if (m_pCurScene)
+		{
+			delete m_pCurScene;
+
+			m_pCurScene = NULL;
+		}
+
+		m_pCurScene = pScene;
+		pScene = NULL;
+		m_bChange = true;
 
 		return SC_CHANGE;
 	}

@@ -5,6 +5,9 @@
 
 class CScene
 {
+private:
+	friend class CSceneManager;
+
 public:
 	CScene();
 	~CScene();

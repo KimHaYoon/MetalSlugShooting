@@ -45,6 +45,7 @@ private:
 	int					m_iGameState;
 	bool				m_bRecv;
 	int					m_iTimeLimit;
+	int					m_iTime;
 	bool				m_bWin[PLAYERMAX];
 
 	string				m_ServerIP;
@@ -56,7 +57,10 @@ public:
 
 	int		GetGameState()	const;
 	int		GetTimeLimit()	const;
+	int		GetTime()		const;
 	bool	GetWin()		const;
+
+	bool	Login(int iNum)	const;
 
 public:
 	void	SetClientNum(int Num);

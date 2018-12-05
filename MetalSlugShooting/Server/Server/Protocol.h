@@ -33,6 +33,7 @@
 #define PLAYER_SPEED	15.f
 #define BULLET_SPEED	30.f
 #define BULLET_DAMAGE	10.f
+#define BOOM_DAMAGE		30.f
 
 struct PlayerInfo
 {
