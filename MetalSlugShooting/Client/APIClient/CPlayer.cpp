@@ -143,7 +143,10 @@ void CPlayer::Input(float fTime)
 
 	else if (m_pInput->KeyDown("ChangeMagazine"))
 	{
-		m_bChange = true;
+		if (m_iIdle == 0)
+			return;
+
+		GET_NETWORKINST->SetKeyData(R_KEY);
 	}
 
 	else if (m_pInput->KeyDown("Boom"))
@@ -255,7 +258,6 @@ void CPlayer::Render(HDC hDC, float fTime)
 		}
 	}
 
-#ifdef _DEBUG
 	TCHAR str[128];
 	if (m_tInfo.num == 1)
 	{
@@ -265,8 +267,8 @@ void CPlayer::Render(HDC hDC, float fTime)
 		wsprintf(str, L"ÆøÅº ¼ö:%d", m_tInfo.boomcnt);
 		TextOut(hDC, 50, 130, str, lstrlen(str));
 
-		wsprintf(str, L"HP:%d", m_tInfo.hp);
-		TextOut(hDC, 50, 160, str, lstrlen(str));
+		//wsprintf(str, L"HP:%d", m_tInfo.hp);
+		//TextOut(hDC, 50, 160, str, lstrlen(str));
 
 		//for (int i = 0; i < BOOMCOUNT; ++i)
 		//{
@@ -274,7 +276,7 @@ void CPlayer::Render(HDC hDC, float fTime)
 		//	TextOut(hDC, 50, 200 + i * 30, str, lstrlen(str));
 		//}
 
-		Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
+		//Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
 
 	}
 
@@ -286,12 +288,9 @@ void CPlayer::Render(HDC hDC, float fTime)
 		wsprintf(str, L"ÆøÅº ¼ö:%d", m_tInfo.boomcnt);
 		TextOut(hDC, 1100, 130, str, lstrlen(str));
 
-		wsprintf(str, L"HP:%d", m_tInfo.hp);
-		TextOut(hDC, 1100, 160, str, lstrlen(str));
+		//wsprintf(str, L"HP:%d", m_tInfo.hp);
+		//TextOut(hDC, 1100, 160, str, lstrlen(str));
 
-		Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
+		//Rectangle(hDC, m_tInfo.x + 80, m_tInfo.y, m_tInfo.x + 120, m_tInfo.y + 100);
 	}
-#endif // _DEBUG
-
-
 }

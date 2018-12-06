@@ -17,6 +17,8 @@ private:
 	class CHPGauge*		m_pHPGauge[2];
 	class CTimerUI*		m_pTimerUI[2];
 	class CWinOrLose*	m_pWinOrLoseUI;
+	class CHeli*		m_pHeli;
+	class CItem*		m_pItem[4];
 
 	int ten, one;
 	 

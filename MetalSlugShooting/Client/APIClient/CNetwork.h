@@ -50,10 +50,19 @@ private:
 
 	string				m_ServerIP;
 
+
+	// æ∆¿Ã≈€
+	HeliInfo			m_tHeilInfo;
+	ITEM_DATA			m_tItem;
+	bool				m_bHeli;
+
 public:
-	SOCKET	GetSock()	const;
-	int		GetClientNum() const;
-	DATA	GetData()	const;
+	SOCKET	GetSock()		const;
+	int		GetClientNum()	const;
+	DATA	GetData()		const;
+	HeliInfo GetHeliInfo()	const;
+	ItemInfo GetItemInfo(int n)	const;
+	bool	GetHeli()		const;
 
 	int		GetGameState()	const;
 	int		GetTimeLimit()	const;

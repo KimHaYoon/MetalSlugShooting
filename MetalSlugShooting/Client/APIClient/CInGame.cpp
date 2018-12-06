@@ -11,10 +11,13 @@
 #include "CNetwork.h"
 #include "CTimerUI.h"
 #include "CWinOrLose.h"
+#include "CHeli.h"
+#include "CItem.h"
 
 CInGame::CInGame() : 
 	m_pBackGround(NULL),
-	m_pWinOrLoseUI(NULL)
+	m_pWinOrLoseUI(NULL),
+	m_pHeli(NULL)
 {
 	for (int i = 0; i < 2; ++i)
 	{
@@ -22,6 +25,11 @@ CInGame::CInGame() :
 		m_pHPBar[i] = NULL;
 		m_pHPGauge[i] = NULL;
 		m_pTimerUI[i] = NULL;
+	}
+
+	for (int i = 0; i < 4; ++i)
+	{
+		m_pItem[i] = NULL;
 	}
 
 	ten = 9;
@@ -137,7 +145,7 @@ bool CInGame::Init()
 	m_pTimerUI[1]->SetPos(627.5f, 3.f);
 	m_pTimerUI[1]->SetNum(0);
 	m_pScene->AddObject(m_pTimerUI[1]);
-
+	//=============================================================================================================
 	// Ω¬∆–ø©∫Œ
 	m_pWinOrLoseUI = new CWinOrLose("WinOrLose");
 	if (!m_pWinOrLoseUI->Init())
@@ -148,6 +156,30 @@ bool CInGame::Init()
 	m_pWinOrLoseUI->SetPos(440.f, 350.f);
 	m_pWinOrLoseUI->SetEnable(false);
 	m_pScene->AddObject(m_pWinOrLoseUI);
+
+	//=============================================================================================================
+	// æ∆¿Ã≈€
+	for (int i = 0; i < 4; ++i)
+	{
+		m_pItem[i] = new CItem("Item");
+		if (!m_pItem[i]->Init())
+		{
+			return false;
+		}
+		m_pItem[i]->SetTexture("Item", m_hInst, m_hDC, L"Texture/Item.bmp", true, RGB(255.f, 0.f, 255.f));
+		m_pItem[i]->SetEnable(false);
+		m_pScene->AddObject(m_pItem[i]);
+	}
+	//=============================================================================================================
+	// «Ô±‚
+	m_pHeli = new CHeli("Heli");
+	if (!m_pHeli->Init())
+	{
+		return false;
+	}
+	m_pHeli->SetTexture("Heli", m_hInst, m_hDC, L"Texture/heli.bmp", true, RGB(255.f, 0.f, 255.f));
+	m_pHeli->SetEnable(false);
+	m_pScene->AddObject(m_pHeli);
 	
 	return true;
 }
@@ -175,6 +207,19 @@ void CInGame::Update(float fTime)
 		m_pTimerUI[0]->SetNum(ten);
 		one = TimeLimit % 10;
 		m_pTimerUI[1]->SetNum(one);
+
+		bool bHeli = GET_NETWORKINST->GetHeli();
+		m_pHeli->SetEnable(bHeli);
+
+		//if (bHeli)
+		{
+			for (int i = 0; i < 4; ++i)
+			{
+				m_pItem[i]->SetItemNum(GET_NETWORKINST->GetItemInfo(i).num);
+				bool bItem = GET_NETWORKINST->GetItemInfo(i).enable;
+				m_pItem[i]->SetEnable(bItem);
+			}
+		}
 	}
 
 	if (GET_NETWORKINST->GetGameState() == GAME_END)

@@ -6,7 +6,8 @@ CNetwork* CNetwork::m_pInst = NULL;
 
 CNetwork::CNetwork() : 
 	m_iGameState(GAME_READY),
-	m_bRecv(false)
+	m_bRecv(false),
+	m_bHeli(false)
 {
 	m_iTimeLimit = 0;
 	m_iTime = 0;
@@ -48,6 +49,21 @@ int CNetwork::GetClientNum() const
 DATA CNetwork::GetData() const
 {
 	return m_tData;
+}
+
+HeliInfo CNetwork::GetHeliInfo() const
+{
+	return m_tHeilInfo;
+}
+
+ItemInfo CNetwork::GetItemInfo(int n) const
+{
+	return m_tItem.Item[n];
+}
+
+bool CNetwork::GetHeli() const
+{
+	return m_bHeli;
 }
 
 int CNetwork::GetGameState() const
@@ -153,6 +169,18 @@ void CNetwork::Update()
 		recv(m_Sock, (char*)&m_iTimeLimit, sizeof(int), 0);
 		_cprintf("recv Time : %d\n", m_iTimeLimit);
 
+		recv(m_Sock, (char*)&m_bHeli, sizeof(m_bHeli), 0);
+		_cprintf("recv Heli %d \n", m_bHeli);
+
+		if (m_bHeli)
+		{
+			recv(m_Sock, (char*)&m_tHeilInfo, sizeof(m_tHeilInfo), 0);
+			_cprintf("recv Heli \n");
+		}
+
+		recv(m_Sock, (char*)&m_tItem, sizeof(m_tItem), 0);
+		_cprintf("recv Item \n");
+
 		recv(m_Sock, (char*)&m_tData, sizeof(DATA), 0);
 		_cprintf("recv Data \n");
 
@@ -182,47 +210,6 @@ void CNetwork::Update()
 
 void CNetwork::Render(HDC hdc)
 {
-#ifdef _DEBUG
-	TCHAR str[128] = {};
-	TCHAR time[128] = {};
-	if (m_iGameState == GAME_READY)
-	{
-		wsprintf(str, L"GameState : Game 대기중");
-	}
-
-	else if (m_iGameState == GAME_OK)
-	{
-		wsprintf(time, L"Time : %d", m_iTime);
-		TextOut(hdc, 400, 200, time, lstrlen(time));
-		wsprintf(str, L"GameState : Game 준비완료");
-	}
-
-	else if (m_iGameState == GAME_PLAY)
-	{
-		wsprintf(time, L"TIME : %d", m_iTimeLimit);
-		wsprintf(str, L"GameState : Game 플레이상태");
-	}
-
-	else if (m_iGameState == GAME_END)
-	{
-		wsprintf(str, L"GameState : Game 종료상태");
-	}
-	TextOut(hdc, 400, 100, str, lstrlen(str));
-	TextOut(hdc, 400, 200, time, lstrlen(time));
-
-	if (Login(1))
-	{
-		wsprintf(str, L"1P Login");
-		TextOut(hdc, 50, 160, str, lstrlen(str));
-	}
-
-	if (Login(2))
-	{
-		wsprintf(str, L"2P Login");
-		TextOut(hdc, 1100, 160, str, lstrlen(str));
-	}
-
-#endif // _DEBUG
 }
 
 void CNetwork::LoadServerIPAddress()

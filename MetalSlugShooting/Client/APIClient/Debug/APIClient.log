@@ -1,5 +1,5 @@
-﻿  CGameFramework.cpp
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cgameframework.cpp(212): warning C4838: 'UINT'에서 'LONG'(으)로의 변환에는 축소 변환이 필요합니다.
-  CLobby.cpp
-  코드를 생성하고 있습니다...
+﻿  CPlayer.cpp
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(49): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(203): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(204): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   APIClient.vcxproj -> C:\Users\Hayoon\Desktop\NGP\trunk\MetalSlugShooting\Client\Debug\APIClient.exe

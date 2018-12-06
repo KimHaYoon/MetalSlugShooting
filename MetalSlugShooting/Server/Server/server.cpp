@@ -8,7 +8,7 @@ int g_iGameState = GAME_READY;
 
 
 float	g_fTime = 0.f;						// 현재 시간
-float	g_fTimeLimit = 90.f;				// 한계 시간
+float	g_fTimeLimit = 85.f;				// 한계 시간
 int		g_iConnectNum = 0;		
 
 CRITICAL_SECTION	cs;
@@ -17,11 +17,18 @@ unordered_map<int, SOCKET*> g_mapClient;
 SOCKET		g_socket[PLAYERMAX] = {};
 DATA		g_tData;
 Key_DATA	g_tKeyData;
+HeliInfo	g_tHeli;
+ITEM_DATA	g_tItem;
 
 int g_iBulletCount[PLAYERMAX] = {};
 int g_iBoomCount[PLAYERMAX] = {};
 bool g_bWin[PLAYERMAX] = {false, false};
 bool g_bSend = false;
+bool g_bHeli = false;
+int g_iHeliDir = 1;
+bool g_bItem[4] = { false, false, false, false };
+bool g_bItemColl[4] = { false, false, false, false };
+int	g_iItemCount = -1;
 
 float g_fTargetPosX[PLAYERMAX][BOOMCOUNT], g_fTargetPosY[PLAYERMAX][BOOMCOUNT];
 float g_fOrgPosX[PLAYERMAX][BOOMCOUNT], g_fOrgPosY[PLAYERMAX][BOOMCOUNT];
@@ -34,6 +41,7 @@ RECT PlayerColl[PLAYERMAX] = {};
 RECT BulletColl[PLAYERMAX][MAXCOUNT];
 RECT BoomColl[PLAYERMAX][BOOMCOUNT];
 RECT Win = { 0, 0, WIN_WIDTH, WIN_HEIGHT };
+RECT ItemColl[4] = {};
 
 DWORD WINAPI ProcessGame(LPVOID arg);
 void Send(const char* buf, int len, string str = NULL);
@@ -47,6 +55,9 @@ void BulletUpdate(int id);
 void BoomUpdate(int id);
 void IsWin();
 bool Collision(RECT rc1, RECT rc2);
+
+void HeliUpdate();
+void ItemUpdate();
 
 int main(int argc, char *argv[])
 {
@@ -118,7 +129,6 @@ int main(int argc, char *argv[])
 
 
 		EnterCriticalSection(&cs);
-		//g_mapClient.insert(make_pair(iConnectNum, &client_sock));
 		g_socket[iConnectNum] = client_sock;
 		LeaveCriticalSection(&cs);
 
@@ -167,14 +177,14 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 			if (g_iGameState == GAME_OK)
 			{
 				int iTime = (int)g_fTime;
-				if (g_fTime > 6.f)
+				if (g_fTime > 3.f)
 				{
 					g_iGameState = GAME_PLAY;
 				}
 				Send((char*)&iTime, sizeof(int), "시작 타이머");
-				g_fTime += 0.033f;
 				Send((char*)&g_tData, sizeof(DATA), "Data");
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
+				g_fTime += 0.033f;
 			}
 
 			if (g_iGameState == GAME_PLAY)
@@ -182,7 +192,22 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				int iTimeLimit = (int)g_fTimeLimit;
 				Send((char*)&iTimeLimit, sizeof(int), "제한시간");
 				cout << iTimeLimit << endl;
-				g_fTimeLimit -= 0.033f;
+
+				if (iTimeLimit % 20 == 0 && !g_bHeli)
+				{
+					g_bHeli = true;
+				}
+
+				Send((char*)&g_bHeli, sizeof(g_bHeli), "g_bHeli");
+
+				if (g_bHeli)
+				{
+					HeliUpdate();
+					Send((char*)&g_tHeli, sizeof(g_tHeli), "헬기");
+				}
+
+				ItemUpdate();
+				Send((char*)&g_tItem, sizeof(g_tItem), "아이템");
 
 				RecvKeyAndDataUpdate();
 				Update();
@@ -197,6 +222,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				cout << "1P : " << g_iBoomCount[0] << "	2P : " << g_iBoomCount[1] << endl;
 
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
+				g_fTimeLimit -= 0.033f;
 			}
 
 			if (g_iGameState == GAME_END)
@@ -370,8 +396,6 @@ void DataUpdate(int id, Key_DATA keydata)
 			g_tData.player[id].state = 11;
 		}
 
-		/*g_fTargetPosX[id][g_iBoomCount[id]] = g_tData.player[id].x + BOOM_DIST * g_tData.player[id].dir;
-		g_fTargetPosY[id][g_iBoomCount[id]] = PLAYER_POS_Y + PLAYER_HEIGHT;*/
 		if (id == 0)
 		{
 			g_fTargetPosX[id][g_iBoomCount[id]] = (PlayerColl[1].left + PlayerColl[1].right) / 2;
@@ -394,6 +418,18 @@ void DataUpdate(int id, Key_DATA keydata)
 		g_tData.boom[id][g_iBoomCount[id]].x = g_tData.player[id].x;
 		g_tData.boom[id][g_iBoomCount[id]].y = g_tData.player[id].y;
 		g_iBoomCount[id] += 1;
+	}
+
+	if (keydata.key == R_KEY)
+	{
+		if (g_tData.player[id].bulletcnt > 0)
+			return;
+
+		if (g_tData.player[id].magazinecnt < 0)
+			return;
+
+		g_tData.player[id].bulletcnt += 10;
+		g_tData.player[id].magazinecnt -= 1;
 	}
 }
 
@@ -436,6 +472,59 @@ bool Collision(RECT rc1, RECT rc2)
 	return true;
 }
 
+void HeliUpdate()
+{
+	g_tHeli.x += 10 * g_iHeliDir;
+
+	if (g_tHeli.x == 440 && !g_tHeli.drop)
+	{
+		g_tHeli.drop = true;
+		g_iHeliDir = 0; 
+		g_iItemCount += 1;
+		return;
+	}
+
+	if (g_tHeli.x >= WIN_WIDTH)
+	{
+		g_bHeli = false;
+		g_tHeli.drop = false;
+		g_tHeli.x = -300;
+		return;
+	}
+
+	if (g_tHeli.drop && !g_tItem.Item[g_iItemCount].enable)
+	{
+		g_iHeliDir = 1;
+
+		g_tHeli.drop = false;
+
+		g_tItem.Item[g_iItemCount].num = g_iItemCount;
+		g_tItem.Item[g_iItemCount].enable = true;
+		g_tItem.Item[g_iItemCount].x = g_tHeli.x + 190;
+		g_tItem.Item[g_iItemCount].y = 250;
+
+		return;
+	}
+}
+
+void ItemUpdate()
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		if (!g_tItem.Item[i].enable)
+		{
+			continue;
+		}
+
+		g_tItem.Item[i].y += 10;
+
+		if (g_tItem.Item[i].y >= PLAYER_POS_Y + 40)
+		{
+			g_tItem.Item[i].y = PLAYER_POS_Y + 40;
+		}
+	}
+}
+
 void Update()
 {
 	for (int i = 0; i < PLAYERMAX; ++i)
@@ -457,10 +546,47 @@ void Update()
 		}
 
 		PlayerColl[i] = { g_tData.player[i].x + 80, g_tData.player[i].y, g_tData.player[i].x + 120, g_tData.player[i].y + 100 };
-		//cout << PlayerColl[i].left << ", " << PlayerColl[i].top << ", " << PlayerColl[i].right << ", " << PlayerColl[i].bottom << endl;
 	}
 	
+	for (int i = 0; i < 4; ++i)
+	{
+		ItemColl[i] = { g_tItem.Item[i].x, g_tItem.Item[i].y , g_tItem.Item[i].x + 50, g_tItem.Item[i].y + 50 };
 
+		for (int j = 0; j < PLAYERMAX; ++j)
+		{
+			if (Collision(ItemColl[i], PlayerColl[j]) && g_tItem.Item[i].enable)
+			{
+				if (g_tItem.Item[i].num == 0)
+				{
+					g_tData.player[j].hp += 30;
+					if (g_tData.player[j].hp > 100)
+						g_tData.player[j].hp = 100;
+
+				}
+
+				else if (g_tItem.Item[i].num == 1)
+				{
+					g_tData.player[j].hp += 70;
+					if (g_tData.player[j].hp > 100)
+						g_tData.player[j].hp = 100;
+				}
+
+				else if (g_tItem.Item[i].num == 2)
+				{
+					g_tData.player[j].magazinecnt += 1;
+				}
+
+				else if (g_tItem.Item[i].num == 3)
+				{
+					g_tData.player[j].boomcnt += 1;
+				}
+
+				g_tItem.Item[i].enable = false;
+			}
+		}
+	}
+	
+	
 	for (int j = 0; j < MAXCOUNT; ++j)
 	{
 		// 총알과 플레이어 충돌
@@ -483,7 +609,7 @@ void Update()
 		// 총알이 맵밖으로벗어나는지 체크
 		for (int i = 0; i < PLAYERMAX; ++i)
 		{
-			if (!Collision(Win, BulletColl[i][j]))
+			if (!Collision(Win, BulletColl[i][j]) && g_tData.bullet[i][j].shoot)
 			{
 				g_tData.bullet[i][j].x = -200;
 				g_tData.bullet[i][j].y = -200;
@@ -529,16 +655,16 @@ void Update()
 
 		for (int i = 0; i < PLAYERMAX; ++i)
 		{
-			// 총알이 맵밖으로벗어나는지 체크
-			if (!Collision(Win, BoomColl[i][j]))
+			// 수류탄이 맵밖으로벗어나는지 체크
+			if (!Collision(Win, BoomColl[i][j]) && g_tData.boom[i][j].shoot)
 			{
 				g_tData.boom[i][j].x = -300;
 				g_tData.boom[i][j].y = -300;
 				g_tData.boom[i][j].shoot = false;
 			}
 
-			// 총알이 땅에 닿았는지 체크
-			if (BoomColl[i][j].bottom >= PLAYER_POS_Y + PLAYER_HEIGHT)
+			// 수류탄이 땅에 닿았는지 체크
+			if (BoomColl[i][j].bottom >= PLAYER_POS_Y + PLAYER_HEIGHT && g_tData.boom[i][j].shoot)
 			{
 				g_tData.boom[i][j].x = -300;
 				g_tData.boom[i][j].y = -300;
@@ -552,24 +678,13 @@ void Update()
 			}
 		}
 	}
-	
-	/*for (int i = 0; i < PLAYERMAX; ++i)
-	{
-		if (!Collision(Win, PlayerColl[i]))
-		{
-			g_bMove[i] = false;
-		}
-		
-		else
-		{
-			g_bMove[i] = true;
-		}
-	}*/
 }
 
 void DataInit()
 {
 	cout << "Data 초기화" << endl;
+
+	srand((unsigned)time(NULL));
 
 	//g_iConnectNum = 0;
 	g_tData.num = 0;
@@ -577,8 +692,8 @@ void DataInit()
 	g_tData.player[0].x = 300;
 	g_tData.player[0].y = PLAYER_POS_Y;
 	g_tData.player[0].magazinecnt = 2;
-	g_tData.player[0].boomcnt = 100;
-	g_tData.player[0].bulletcnt = 100;
+	g_tData.player[0].boomcnt = 2;
+	g_tData.player[0].bulletcnt = 10;
 	g_tData.player[0].hp = 100;
 	g_tData.player[0].dir = 1;
 
@@ -586,8 +701,8 @@ void DataInit()
 	g_tData.player[1].x = 500;
 	g_tData.player[1].y = PLAYER_POS_Y;
 	g_tData.player[1].magazinecnt = 2;
-	g_tData.player[1].boomcnt = 100;
-	g_tData.player[1].bulletcnt = 100;
+	g_tData.player[1].boomcnt = 2;
+	g_tData.player[1].bulletcnt = 10;
 	g_tData.player[1].hp = 100;
 	g_tData.player[1].dir = -1;
 
@@ -612,6 +727,10 @@ void DataInit()
 		g_iBulletCount[i] = 0;
 		g_iBoomCount[i] = 0;
 	}
+
+	g_tHeli.drop = false;
+	g_tHeli.x = -300;
+
 }
 
 void BulletUpdate(int id)

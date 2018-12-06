@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CItem.h"
 #include "CAnimation.h"
+#include "CNetwork.h"
 
 CItem::CItem()
 {
@@ -8,8 +9,6 @@ CItem::CItem()
 
 CItem::CItem(const string & strTag) : CGameObject(strTag)
 {
-	m_fSpeed = 200.f;
-	m_bDrop = true;
 }
 
 
@@ -17,52 +16,46 @@ CItem::~CItem()
 {
 }
 
-void CItem::SetInfo(int num, int x, int y)
-{
-	m_tInfo.num = num;
-	m_tInfo.x = x;
-	m_tInfo.y = y;
-}
-
-void CItem::NotDrop()
-{
-	m_bDrop = false;
-}
-
 bool CItem::Init()
 {
-	m_fSpeed = 200.f;
-	m_bDrop = true;
+	CreateAnimation("Item", AT_LINE, AO_LOOP, 200, 50, 4, 1, 1.f);
+	m_pAnimation->AddLineFrameCount(4);								// 가로 프레임 개수
+	m_pAnimation->ChangeAnimation(0);
+
 	return true;
 }
 
 void CItem::Input(float fTime)
 {
+	
 }
 
 void CItem::Update(float fTime)
 {
 	CGameObject::Update(fTime);
 
-	if (m_bDrop)
+	if (m_tInfo.num != -1)
 	{
-		if (m_fPos.y < 600.f)
-			m_fPos.y += m_fSpeed * fTime;
-
-		else
-		{
-			m_bDrop = false;
-			if (m_pAnimation)
-			{
-				int iCurFrame = m_pAnimation->GetAnimationInfo().iFrameX;
-				m_pAnimation->SetFrameX(iCurFrame);
-			}
-		}
+		m_pAnimation->SetFrameX(m_tInfo.num);
 	}
 
+	m_tInfo = GET_NETWORKINST->GetItemInfo(m_tInfo.num);
+
+	m_fPos.x = m_tInfo.x;
+	m_fPos.y = m_tInfo.y;
 }
 
 void CItem::Render(HDC hDC, float fTime)
 {
 	CGameObject::Render(hDC, fTime);
+}
+
+void CItem::SetItemNum(int num)
+{
+	m_tInfo.num = num;
+}
+
+int CItem::GetNum() const
+{
+	return m_tInfo.num;
 }

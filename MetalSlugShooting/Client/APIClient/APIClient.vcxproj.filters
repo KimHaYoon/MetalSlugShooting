@@ -91,6 +91,12 @@
     <Filter Include="03. 오브젝트\05. UI\02. 타이머\02. Ingame">
       <UniqueIdentifier>{a183cb84-0a27-487d-b061-1825947ed50e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. 오브젝트\04. 아이템\00. 헬기">
+      <UniqueIdentifier>{2ff67f1d-d6f8-45d6-850f-5092a1e2261c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. 오브젝트\05. UI\04. 로비캐릭터">
+      <UniqueIdentifier>{a86aa83e-0a34-46b3-b67b-5c2911283dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -186,6 +192,12 @@
     <ClInclude Include="CLobbyTimerUI.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CHeli.h">
+      <Filter>03. 오브젝트\04. 아이템\00. 헬기</Filter>
+    </ClInclude>
+    <ClInclude Include="CLobbyCharactor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -267,6 +279,12 @@
       <Filter>03. 오브젝트\05. UI\02. 타이머\02. Ingame</Filter>
     </ClCompile>
     <ClCompile Include="CLobbyTimerUI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CHeli.cpp">
+      <Filter>03. 오브젝트\04. 아이템\00. 헬기</Filter>
+    </ClCompile>
+    <ClCompile Include="CLobbyCharactor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -156,6 +156,7 @@
     <ClInclude Include="CGameFramework.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CHealing.h" />
+    <ClInclude Include="CHeli.h" />
     <ClInclude Include="CHPBar.h" />
     <ClInclude Include="CHPGauge.h" />
     <ClInclude Include="CInGame.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="CItem.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="CLobby.h" />
+    <ClInclude Include="CLobbyCharactor.h" />
     <ClInclude Include="CLobbyTimerUI.h" />
     <ClInclude Include="CMagazine.h" />
     <ClInclude Include="CNetwork.h" />
@@ -189,12 +191,14 @@
     <ClCompile Include="CGameFramework.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CHealing.cpp" />
+    <ClCompile Include="CHeli.cpp" />
     <ClCompile Include="CHPBar.cpp" />
     <ClCompile Include="CHPGauge.cpp" />
     <ClCompile Include="CInGame.cpp" />
     <ClCompile Include="CInput.cpp" />
     <ClCompile Include="CItem.cpp" />
     <ClCompile Include="CLobby.cpp" />
+    <ClCompile Include="CLobbyCharactor.cpp" />
     <ClCompile Include="CLobbyTimerUI.cpp" />
     <ClCompile Include="CMagazine.cpp" />
     <ClCompile Include="CNetwork.cpp" />
