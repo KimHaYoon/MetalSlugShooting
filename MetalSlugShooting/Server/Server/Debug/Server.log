@@ -1,8 +1,1 @@
-﻿  server.cpp
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(93): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(268): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(275): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(379): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(394): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\home\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(485): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Server.vcxproj -> C:\Users\Home\Documents\GitHub\MetalSlugShooting\MetalSlugShooting\Server\Debug\Server.exe
+﻿  Server.vcxproj -> C:\Users\Hayoon\Desktop\NGP\branches\test_heli\MetalSlugShooting\Server\Debug\Server.exe
