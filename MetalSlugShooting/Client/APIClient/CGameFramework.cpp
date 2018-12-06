@@ -19,9 +19,9 @@ CGameFramework::CGameFramework() :
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_CrtSetBreakAlloc(215);
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 	AllocConsole();
-//#endif
+#endif
 }
 
 CGameFramework::~CGameFramework()
@@ -58,9 +58,9 @@ CGameFramework::~CGameFramework()
 
 	DESTROY_NETWORK
 
-//#ifdef _DEBUG
+#ifdef _DEBUG
 		FreeConsole();
-//#endif // _DEBUG
+#endif // _DEBUG
 }
 
 bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * pClass, int iIconID, UINT iWidth, UINT iHeight, bool bWindowMode, bool bOnMouseRenderer)
@@ -75,6 +75,13 @@ bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * p
 	InitWindow(pClass, pTitle, iWidth, iHeight);
 
 	m_hDC = ::GetDC(m_hWnd);
+
+#ifdef SERVERON
+	if (!GET_NETWORKINST->Init())
+	{
+		return false;
+	}
+#endif
 
 	// Timer 초기화
 	m_pTimer = new CTimer;
@@ -97,13 +104,6 @@ bool CGameFramework::Init(HINSTANCE hInst, const TCHAR * pTitle, const TCHAR * p
 	{
 		return false;
 	}	
-
-#ifdef SERVERON
-	if (!GET_NETWORKINST->Init())
-	{
-		return false;
-	}
-#endif
 
 	// 백버퍼 생성
 	m_pBackBuffer = new CTexture;

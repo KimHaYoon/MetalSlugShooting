@@ -2,6 +2,7 @@
 #include "CGameObject.h"
 #include "CBullet.h"
 #include "CBoomBullet.h"
+#include "CBackground.h"
 
 class CPlayer : public CGameObject
 {
@@ -12,6 +13,7 @@ public:
 
 private:
 	PlayerInfo	m_tInfo;
+	int			m_iClientNum;
 
 	float		m_fSpeed;
 	
@@ -24,6 +26,8 @@ private:
 	bool		m_bScene;		// 굳이 씬 여러번 채워줄 필요없으니까
 	int			m_iIdle;
 
+	CBackground	m_pPoint;
+
 public:
 	PlayerInfo GetPlayerInfo()	const;
 	int	GetHP() const;
@@ -33,6 +37,7 @@ public:
 	void SetPlayerInfo(PlayerInfo info);
 	void SetBulletInfo(BulletInfo* info);
 	void SetBoomInfo(BoomInfo* info);
+	void SetClientNum(int iNum);
 
 private:
 	void ChangeMagazine();

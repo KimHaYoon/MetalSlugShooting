@@ -180,6 +180,8 @@ bool CInGame::Init()
 	m_pHeli->SetTexture("Heli", m_hInst, m_hDC, L"Texture/heli.bmp", true, RGB(255.f, 0.f, 255.f));
 	m_pHeli->SetEnable(false);
 	m_pScene->AddObject(m_pHeli);
+	//=============================================================================================================
+
 	
 	return true;
 }

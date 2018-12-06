@@ -1,5 +1,9 @@
-﻿  CPlayer.cpp
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(49): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(203): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\hayoon\desktop\ngp\trunk\metalslugshooting\client\apiclient\cplayer.cpp(204): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  APIClient.vcxproj -> C:\Users\Hayoon\Desktop\NGP\trunk\MetalSlugShooting\Client\Debug\APIClient.exe
+﻿  CInGame.cpp
+  CLobby.cpp
+  CPlayer.cpp
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\client\apiclient\cplayer.cpp(47): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\client\apiclient\cplayer.cpp(215): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\client\apiclient\cplayer.cpp(216): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CSceneManager.cpp
+  코드를 생성하고 있습니다...
+  APIClient.vcxproj -> C:\Users\HaYoon\Desktop\MetalSlugShooting.git\trunk\MetalSlugShooting\Client\Debug\APIClient.exe

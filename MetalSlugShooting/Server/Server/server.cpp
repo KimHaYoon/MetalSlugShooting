@@ -8,7 +8,7 @@ int g_iGameState = GAME_READY;
 
 
 float	g_fTime = 0.f;						// 현재 시간
-float	g_fTimeLimit = 85.f;				// 한계 시간
+float	g_fTimeLimit = 90.f;				// 한계 시간
 int		g_iConnectNum = 0;		
 
 CRITICAL_SECTION	cs;
@@ -177,14 +177,14 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 			if (g_iGameState == GAME_OK)
 			{
 				int iTime = (int)g_fTime;
-				if (g_fTime > 3.f)
+				if (g_fTime > 4.f)
 				{
 					g_iGameState = GAME_PLAY;
 				}
 				Send((char*)&iTime, sizeof(int), "시작 타이머");
 				Send((char*)&g_tData, sizeof(DATA), "Data");
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
-				g_fTime += 0.033f;
+				g_fTime += 0.0333f;
 			}
 
 			if (g_iGameState == GAME_PLAY)
@@ -219,10 +219,8 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 					g_iGameState = GAME_END;
 				}
 
-				cout << "1P : " << g_iBoomCount[0] << "	2P : " << g_iBoomCount[1] << endl;
-
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
-				g_fTimeLimit -= 0.033f;
+				g_fTimeLimit -= 0.0333f;
 			}
 
 			if (g_iGameState == GAME_END)
@@ -245,11 +243,18 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 
 void Send(const char * buf, int len, string str)
 {
+	int retval;
+
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
 		if (g_socket[i] != NULL)
 		{
-			send(g_socket[i], buf, len, 0);
+			retval = send(g_socket[i], buf, len, 0);
+			if (retval == SOCKET_ERROR)
+			{
+				cout << i + 1 << "P가 종료";
+				return;
+			}
 			cout << i + 1 << "send " << str << endl;
 		}
 	}
@@ -257,11 +262,18 @@ void Send(const char * buf, int len, string str)
 
 void Recv(char * buf, int len, string str)
 {
+	int retval;
+
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
 		if (g_socket[i] != NULL)
 		{
-			recv(g_socket[i], buf, len, 0);
+			retval = recv(g_socket[i], buf, len, 0);
+			if (retval == SOCKET_ERROR)
+			{
+				cout << i + 1 << "P가 종료";
+				return;
+			}
 			cout << i + 1 << "recv " << str << endl;
 		}
 	}
@@ -301,6 +313,7 @@ void DataUpdate(int id, Key_DATA keydata)
 		{
 			g_tData.player[id].state = 1;
 		}
+		PlayerColl[id] = { g_tData.player[id].x + 80, g_tData.player[id].y, g_tData.player[id].x + 120, g_tData.player[id].y + 100 };
 	}
 
 	if (keydata.key == LEFT_KEY)
@@ -344,6 +357,7 @@ void DataUpdate(int id, Key_DATA keydata)
 		{
 			g_tData.player[id].state = 9;
 		}
+		PlayerColl[id] = { g_tData.player[id].x + 80, g_tData.player[id].y + 50, g_tData.player[id].x + 120, g_tData.player[id].y + 100 };
 	}
 
 	if (keydata.key == SHOOT_KEY)
@@ -481,6 +495,7 @@ void HeliUpdate()
 		g_tHeli.drop = true;
 		g_iHeliDir = 0; 
 		g_iItemCount += 1;
+		g_iItemCount %= 4;
 		return;
 	}
 
@@ -545,7 +560,7 @@ void Update()
 			}
 		}
 
-		PlayerColl[i] = { g_tData.player[i].x + 80, g_tData.player[i].y, g_tData.player[i].x + 120, g_tData.player[i].y + 100 };
+		//PlayerColl[i] = { g_tData.player[i].x + 80, g_tData.player[i].y, g_tData.player[i].x + 120, g_tData.player[i].y + 100 };
 	}
 	
 	for (int i = 0; i < 4; ++i)
@@ -698,7 +713,7 @@ void DataInit()
 	g_tData.player[0].dir = 1;
 
 	g_tData.player[1].num = -1;
-	g_tData.player[1].x = 500;
+	g_tData.player[1].x = 700;
 	g_tData.player[1].y = PLAYER_POS_Y;
 	g_tData.player[1].magazinecnt = 2;
 	g_tData.player[1].boomcnt = 2;

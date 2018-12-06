@@ -3,13 +3,11 @@
 #include "CInput.h"
 #include "CAnimation.h"
 #include "CTexture.h"
-//#include "CBullet.h"
 #include "CScene.h"
 #include "CItem.h"
-//#include "CBoom.h"
 #include "CNetwork.h"
 
-CPlayer::CPlayer()
+CPlayer::CPlayer() 
 {
 }
 
@@ -58,6 +56,11 @@ void CPlayer::SetBoomInfo(BoomInfo * info)
 	}
 }
 
+void CPlayer::SetClientNum(int iNum)
+{
+	m_iClientNum = iNum;
+}
+
 void CPlayer::ChangeMagazine()
 {
 	m_bChange = false;
@@ -97,6 +100,7 @@ bool CPlayer::Init()
 
 
 	m_pAnimation->ChangeAnimation(0);
+
 	
 	return true;
 }
@@ -105,7 +109,6 @@ void CPlayer::Input(float fTime)
 {
 	if (m_tInfo.num != GET_NETWORKINST->GetClientNum())
 	{
-		int a = 0;
 		return;
 	}
 
@@ -197,11 +200,22 @@ void CPlayer::Update(float fTime)
 
 		}
 
+
+		if (m_tInfo.num == GET_NETWORKINST->GetClientNum())
+		{
+			// 플레이어 표시
+			m_pPoint.Init();
+			m_pPoint.SetTexture("Point", m_pScene->GetInst(), m_pScene->GetHdc(), L"Texture/ME.bmp", true, RGB(255.f, 0.f, 255.f));
+		}
+
 		m_bScene = true;			// 씬 채워줬으니 true 
+
 	}
 
 	m_fPos.x = m_tInfo.x;
 	m_fPos.y = m_tInfo.y;
+
+	m_pPoint.SetPos(m_fPos.x + 60.f, m_fPos.y - 130.f);
 
 	if (m_bChange)
 	{
@@ -256,6 +270,8 @@ void CPlayer::Render(HDC hDC, float fTime)
 		{
 			m_pBoom[i].Render(hDC, fTime);
 		}
+
+		m_pPoint.Render(hDC, fTime);
 	}
 
 	TCHAR str[128];

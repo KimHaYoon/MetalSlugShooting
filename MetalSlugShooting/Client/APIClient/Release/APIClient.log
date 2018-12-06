@@ -1,7 +1,7 @@
-﻿  CTimer.cpp
+﻿  CLobby.cpp
   코드를 생성하고 있습니다.
-  8 of 795 functions ( 1.0%) were compiled, the rest were copied from previous compilation.
+  1 of 866 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  APIClient.vcxproj -> C:\Users\Hayoon\Documents\GitHub\MetalSlugShooting\MetalSlugShooting\Client\Release\APIClient.exe
+  APIClient.vcxproj -> C:\Users\HaYoon\Desktop\MetalSlugShooting.git\trunk\MetalSlugShooting\Client\Release\APIClient.exe

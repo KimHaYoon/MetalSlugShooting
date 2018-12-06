@@ -1,8 +1,22 @@
 ﻿  server.cpp
-c:\users\hayoon\documents\github\metalslugshooting\metalslugshooting\server\server\server.cpp(70): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(109): warning C4101: 'hThread' :참조되지 않은 지역 변수입니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(310): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(316): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(325): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(331): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(401): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(407): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(411): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(418): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(419): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(597): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(605): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(631): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(646): warning C4244: '-=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\hayoon\desktop\metalslugshooting.git\trunk\metalslugshooting\server\server\server.cpp(750): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   코드를 생성하고 있습니다.
-  2 of 258 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+  0 of 215 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   코드를 생성했습니다.
-  Server.vcxproj -> C:\Users\Hayoon\Documents\GitHub\MetalSlugShooting\MetalSlugShooting\Server\Release\Server.exe
+  Server.vcxproj -> C:\Users\HaYoon\Desktop\MetalSlugShooting.git\trunk\MetalSlugShooting\Server\Release\Server.exe

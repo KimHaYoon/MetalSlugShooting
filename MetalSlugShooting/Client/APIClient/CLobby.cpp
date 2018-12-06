@@ -9,7 +9,8 @@
 
 
 CLobby::CLobby() : 
-	m_pBackGround(NULL)
+	m_pBackGround(NULL),
+	m_pRect(NULL)
 {
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
@@ -58,6 +59,19 @@ bool CLobby::Init()
 	m_pPlayerNum[1]->SetPos(736.f, 137.f);
 	m_pPlayerNum[1]->SetTexture("Background", m_hInst, m_hDC, L"Texture/p2_resize.bmp", true, RGB(0, 0, 0));
 	m_pScene->AddObject(m_pPlayerNum[1]);
+
+
+	m_pRect = new CBackground("Rect");
+	if (!m_pRect->Init())
+		return false;
+	int iNum = GET_NETWORKINST->GetClientNum();
+	if (iNum == 1)
+		m_pRect->SetPos(350, 210.f);
+	else if(iNum == 2)
+		m_pRect->SetPos(673, 210.f);
+	m_pRect->SetTexture("RECT", m_hInst, m_hDC, L"Texture/red_rect.bmp", true, RGB(255, 255, 255));
+	m_pScene->AddObject(m_pRect);
+
 
 	m_pCharactor[0] = new CLobbyCharactor("Player1");
 	if (!m_pCharactor[0]->Init())
