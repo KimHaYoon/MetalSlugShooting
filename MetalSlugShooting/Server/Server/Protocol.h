@@ -16,12 +16,6 @@
 #define RIGHT_KEY		4		// 키보드 방향키 →
 #define DOWN_KEY		5		// 키보드 방향키 ↓
 #define SHOOT_KEY		6		// 제자리에서 총알발사
-#define SHOOT_LEFT_KEY	7		// 왼쪽 총알 발삿!
-#define SHOOT_RIGHT_KEY 8		// 오른쪽 총알 발사!
-#define BOOM_LEFT_KEY	9		// 왼쪽으로 폭탄 발사!
-#define BOOM_RIGHT_KEY	10		// 오른쪽으로 폭탄 발사!
-#define CHANGEM_LEGT_KEY	11	// 왼쪽에서 장전!
-#define CHANGEM_RIGHt_KEY	12	// 오른쪽에서 장전!
 
 #define PLAYERMAX		2
 #define MAXCOUNT		10

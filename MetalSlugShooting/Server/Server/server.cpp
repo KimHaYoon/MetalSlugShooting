@@ -159,7 +159,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 	{
 		DWORD dwNow = GetTickCount();
 
-		if (dwTime + 33 > dwNow)
+		if (dwTime + 10 > dwNow)
 		{
 			continue;
 		}
@@ -184,7 +184,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				Send((char*)&iTime, sizeof(int), "시작 타이머");
 				Send((char*)&g_tData, sizeof(DATA), "Data");
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_OK");
-				g_fTime += 0.0333f;
+				g_fTime += 0.03f;
 			}
 
 			if (g_iGameState == GAME_PLAY)
@@ -220,7 +220,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 				}
 
 				Send((char*)&g_iGameState, sizeof(g_iGameState), "GameState : GAME_PLAY");
-				g_fTimeLimit -= 0.0333f;
+				g_fTimeLimit -= 0.05f;
 			}
 
 			if (g_iGameState == GAME_END)
@@ -244,7 +244,7 @@ DWORD WINAPI ProcessGame(LPVOID arg)
 void Send(const char * buf, int len, string str)
 {
 	int retval;
-
+	
 	for (int i = 0; i < PLAYERMAX; ++i)
 	{
 		if (g_socket[i] != NULL)
